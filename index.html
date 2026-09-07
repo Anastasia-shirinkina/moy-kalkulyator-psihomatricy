@@ -232,6 +232,11 @@ return;
 
 }
 
+
+/* =========================
+   ДОПОЛНИТЕЛЬНЫЕ ЧИСЛА
+   ========================= */
+
 const dateString =
 String(day).padStart(2,'0') +
 String(month).padStart(2,'0') +
@@ -240,14 +245,23 @@ String(year);
 const dateDigits =
 dateString.split('').map(Number);
 
+
+/* Первое дополнительное число */
+
 const A =
 dateDigits.reduce(
 (sum,digit)=>sum + digit,
 0
 );
 
+
+/* Второе дополнительное число */
+
 const B =
 sumDigits(A);
+
+
+/* Третье дополнительное число */
 
 const firstDayDigit =
 day < 10
@@ -257,59 +271,81 @@ day < 10
 const C =
 A - (2 * firstDayDigit);
 
+
+/* Четвёртое дополнительное число */
+
 const D =
 sumDigits(C);
 
-const matrixExtra =
-sumDigits(B);
+
+/* =========================
+   ПСИХОМАТРИЦА
+   Дата + ВСЕ 4
+   дополнительных числа
+   ========================= */
 
 const allDigits = [];
 
-dateDigits.forEach(digit=>{
+
+/* Цифры даты рождения */
+
+dateDigits.forEach(digit => {
 
 if(digit !== 0){
 allDigits.push(digit);
 }
 
 });
+
+
+/* Цифры первого дополнительного числа */
 
 String(A)
 .split('')
 .map(Number)
-.forEach(digit=>{
+.forEach(digit => {
 
 if(digit !== 0){
 allDigits.push(digit);
 }
 
 });
+
+
+/* Цифры второго дополнительного числа */
 
 String(B)
 .split('')
 .map(Number)
-.forEach(digit=>{
+.forEach(digit => {
 
 if(digit !== 0){
 allDigits.push(digit);
 }
 
 });
+
+
+/* Цифры третьего дополнительного числа */
 
 String(C)
 .split('')
 .map(Number)
-.forEach(digit=>{
+.forEach(digit => {
 
 if(digit !== 0){
 allDigits.push(digit);
 }
 
 });
+
+
+/* Цифры четвёртого дополнительного числа */
 
 String(D)
 .split('')
 .map(Number)
-.forEach(digit=>{
+.forEach(digit => {
 
 if(digit !== 0){
 allDigits.push(digit);
@@ -317,9 +353,10 @@ allDigits.push(digit);
 
 });
 
-if(matrixExtra !== 0){
-allDigits.push(matrixExtra);
-}
+
+/* =========================
+   ПОДСЧЁТ ЦИФР
+   ========================= */
 
 const counts = {
 
@@ -335,13 +372,18 @@ const counts = {
 
 };
 
-allDigits.forEach(digit=>{
+allDigits.forEach(digit => {
 
 if(digit >= 1 && digit <= 9){
 counts[digit]++;
 }
 
 });
+
+
+/* =========================
+   НАЗВАНИЯ ПОКАЗАТЕЛЕЙ
+   ========================= */
 
 const names = {
 
@@ -357,6 +399,11 @@ const names = {
 
 };
 
+
+/* =========================
+   ВЫВОД ПСИХОМАТРИЦЫ
+   ========================= */
+
 const matrix =
 document.getElementById('matrix');
 
@@ -367,7 +414,7 @@ matrix.innerHTML = '';
 2,5,8,
 3,6,9
 ]
-.forEach(number=>{
+.forEach(number => {
 
 const cell =
 document.createElement('div');
@@ -393,9 +440,19 @@ matrix.appendChild(cell);
 
 });
 
+
+/* =========================
+   ДОПОЛНИТЕЛЬНЫЕ ЧИСЛА
+   ========================= */
+
 document.getElementById('extras')
 .textContent =
 `${A} / ${B} / ${C} / ${D}`;
+
+
+/* =========================
+   ДОПОЛНИТЕЛЬНЫЕ ПОКАЗАТЕЛИ
+   ========================= */
 
 const indicators = [
 
@@ -449,12 +506,13 @@ counts[3]
 
 ];
 
+
 document.getElementById('indicators')
 .innerHTML =
 
 indicators
 
-.map(row=>`
+.map(row => `
 
 <tr>
 
@@ -472,10 +530,16 @@ indicators
 
 .join('');
 
+
 document.getElementById('result')
 .style.display = 'block';
 
 }
+
+
+/* =========================
+   КОПИРОВАНИЕ РЕЗУЛЬТАТА
+   ========================= */
 
 function copyResult(){
 
@@ -485,7 +549,7 @@ document.getElementById('result')
 
 navigator.clipboard
 .writeText(text)
-.then(()=>{
+.then(() => {
 
 alert('Результат скопирован.');
 
