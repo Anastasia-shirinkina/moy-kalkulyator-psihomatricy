@@ -248,6 +248,9 @@ function calculate(){
     ПЕРВОЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
 
     Сумма всех цифр даты.
+
+    24.06.1987:
+    2+4+0+6+1+9+8+7 = 37
   */
 
   const A =
@@ -259,6 +262,10 @@ function calculate(){
 
   /*
     ВТОРОЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
+
+    Сумма цифр первого.
+
+    37 → 3+7 = 10
   */
 
   const B =
@@ -269,6 +276,8 @@ function calculate(){
     ТРЕТЬЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
 
     Сумма цифр второго.
+
+    10 → 1+0 = 1
   */
 
   const C =
@@ -283,7 +292,8 @@ function calculate(){
     цифра дня рождения.
 
     Для 24 берём 2.
-    Для 06 берём 6.
+
+    37 - (2 × 2) = 33
   */
 
   const firstDayDigit =
@@ -300,6 +310,8 @@ function calculate(){
     ПЯТОЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
 
     Сумма цифр четвёртого.
+
+    33 → 3+3 = 6
   */
 
   const E =
@@ -320,39 +332,37 @@ function calculate(){
     Нули исключаем.
   */
 
-  const all =
-    digits
-      .filter(x=>x!==0)
+  const all = [];
 
-      .concat(
-        String(A)
-          .split('')
-          .map(Number)
-      )
+  digits.forEach(x=>{
 
-      .concat(
-        String(B)
-          .split('')
-          .map(Number)
-      )
+    if(x !== 0){
+      all.push(x);
+    }
 
-      .concat(
-        String(C)
-          .split('')
-          .map(Number)
-      )
+  });
 
-      .concat(
-        String(Math.abs(D))
-          .split('')
-          .map(Number)
-      )
 
-      .concat(
-        String(E)
-          .split('')
-          .map(Number)
-      );
+  [
+    A,
+    B,
+    C,
+    D,
+    E
+  ].forEach(number=>{
+
+    String(Math.abs(number))
+      .split('')
+      .map(Number)
+      .forEach(x=>{
+
+        if(x !== 0){
+          all.push(x);
+        }
+
+      });
+
+  });
 
 
   /*
@@ -455,9 +465,11 @@ function calculate(){
   /*
     ДОПОЛНИТЕЛЬНЫЕ ЧИСЛА
 
-    Только числа.
-    Без формул.
-    Без "Числа судьбы".
+    Для 24.06.1987:
+
+    37 / 10 / 1 / 33 / 6
+
+    Ровно пять чисел.
   */
 
   document.getElementById('extras')
