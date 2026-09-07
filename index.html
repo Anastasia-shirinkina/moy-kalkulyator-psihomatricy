@@ -1,644 +1,562 @@
-```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Мой калькулятор психоматрицы</title>
+
+<title>Калькулятор психоматрицы</title>
 
 <style>
-  body{
+body{
     font-family:Arial,sans-serif;
     max-width:760px;
     margin:0 auto;
     padding:24px;
     background:#f7f5f2;
     color:#222;
-  }
+}
 
-  .card{
+.card{
     background:white;
     border-radius:18px;
     padding:24px;
     box-shadow:0 4px 20px rgba(0,0,0,.08);
-  }
+}
 
-  h1{
+h1{
     margin-top:0;
-  }
+}
 
-  input,button{
+h2{
+    margin-top:28px;
+}
+
+h3{
+    margin-top:24px;
+}
+
+input,button{
     font-size:18px;
     padding:12px;
     border-radius:10px;
-  }
+}
 
-  input{
+input{
     border:1px solid #ccc;
     width:220px;
-  }
+}
 
-  button{
+button{
     border:0;
     background:#222;
     color:white;
     cursor:pointer;
     margin-left:8px;
-  }
+}
 
-  button:hover{
-    opacity:.9;
-  }
-
-  .grid{
+.grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
     gap:10px;
     margin:20px 0;
-  }
+}
 
-  .cell{
+.cell{
     border:1px solid #ddd;
     border-radius:12px;
     padding:14px;
     text-align:center;
-  }
+}
 
-  .num{
+.num{
     font-size:13px;
     color:#777;
-  }
+}
 
-  .val{
+.val{
     font-size:24px;
     font-weight:bold;
     margin-top:6px;
-    word-break:break-word;
-  }
+}
 
-  table{
+table{
     width:100%;
     border-collapse:collapse;
     margin-top:18px;
-  }
+}
 
-  td{
+td{
     padding:10px 8px;
     border-bottom:1px solid #eee;
-  }
+}
 
-  td:last-child{
+td:last-child{
     text-align:right;
-  }
+}
 
-  .error{
+.error{
     color:#b00020;
     margin-top:12px;
-  }
+}
 
-  .copy{
+.copy{
     background:#555;
-    margin:16px 0 0 0;
-  }
+    margin:20px 0 0 0;
+}
 
-  small{
+small{
     color:#666;
-  }
+}
 
-  .formula{
-    background:#f7f5f2;
-    border-radius:12px;
-    padding:14px;
-    margin-top:18px;
-    line-height:1.6;
-  }
+.extra-numbers{
+    font-size:22px;
+    font-weight:bold;
+    letter-spacing:1px;
+    padding:12px 0;
+}
 
-  @media(max-width:600px){
+@media(max-width:600px){
     body{
-      padding:12px;
+        padding:14px;
     }
 
     .card{
-      padding:18px;
-    }
-
-    input{
-      width:100%;
-      box-sizing:border-box;
-    }
-
-    button{
-      width:100%;
-      margin:10px 0 0 0;
+        padding:18px;
     }
 
     .grid{
-      gap:6px;
+        gap:7px;
     }
 
     .cell{
-      padding:12px 5px;
+        padding:10px 5px;
     }
 
     .val{
-      font-size:21px;
+        font-size:20px;
     }
-  }
+
+    input{
+        width:calc(100% - 24px);
+        margin-bottom:10px;
+    }
+
+    button{
+        margin-left:0;
+    }
+}
 </style>
+
 </head>
 
 <body>
 
 <div class="card">
 
-  <h1>Калькулятор психоматрицы</h1>
+<h1>Калькулятор психоматрицы</h1>
 
-  <p>
-    Введите дату рождения и получите расчёт психоматрицы.
-  </p>
+<p>
+Введите дату рождения и получите психоматрицу,
+дополнительные числа и дополнительные показатели.
+</p>
 
-  <div>
+<div>
     <input id="date" type="date">
     <button onclick="calculate()">Рассчитать</button>
-  </div>
+</div>
 
-  <div id="error" class="error"></div>
+<div id="error" class="error"></div>
 
-  <div id="result" style="display:none">
+<div id="result" style="display:none">
 
-    <h2>Результат</h2>
+<h2>Психоматрица</h2>
 
-    <div class="grid" id="matrix"></div>
+<div class="grid" id="matrix"></div>
 
-    <h3>Дополнительные числа</h3>
+<h3>Дополнительные числа</h3>
 
-    <table id="extras"></table>
+<div id="extras" class="extra-numbers"></div>
 
-    <div class="formula">
-      <strong>Расчёт:</strong>
-      <div id="formulaText"></div>
-    </div>
+<h3>Дополнительные показатели</h3>
 
-    <button class="copy" onclick="copyResult()">
-      Скопировать результат
-    </button>
+<table id="indicators"></table>
 
-    <p>
-      <small>
-        Нули в ячейки психоматрицы не заносятся.
-      </small>
-    </p>
+<button class="copy" onclick="copyResult()">
+Скопировать результат
+</button>
 
-  </div>
+<p>
+<small>
+Нули в ячейки психоматрицы не заносятся.
+</small>
+</p>
+
+</div>
 
 </div>
 
 
 <script>
 
-/* -------------------------------------------------------
-   СУММА ЦИФР
-------------------------------------------------------- */
-
 function sumDigits(n){
-
-  return String(Math.abs(n))
-    .split('')
-    .reduce((sum,digit)=>sum + Number(digit),0);
-
+    return String(Math.abs(n))
+        .split('')
+        .reduce((sum,digit)=>sum + Number(digit),0);
 }
 
-
-/* -------------------------------------------------------
-   РАСЧЁТ
-------------------------------------------------------- */
 
 function calculate(){
 
-  const val = document.getElementById('date').value;
-  const error = document.getElementById('error');
+    const value = document.getElementById('date').value;
 
-  error.textContent = '';
+    const error = document.getElementById('error');
 
-  if(!val){
+    error.textContent = '';
 
-    error.textContent = 'Введите дату рождения.';
-    return;
 
-  }
+    if(!value){
 
+        error.textContent = 'Введите дату рождения.';
 
-  const [year,month,day] = val.split('-').map(Number);
-
-
-  if(!year || !month || !day){
-
-    error.textContent = 'Проверьте дату.';
-    return;
-
-  }
-
-
-  /*
-    Формируем дату.
-
-    Например:
-
-    24.06.1987
-
-    2 + 4 + 0 + 6 + 1 + 9 + 8 + 7
-  */
-
-  const dateString =
-    String(day).padStart(2,'0') +
-    String(month).padStart(2,'0') +
-    String(year);
-
-
-  const dateDigits =
-    dateString
-      .split('')
-      .map(Number);
-
-
-  /* ---------------------------------------------------
-     1. ПЕРВОЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
-
-     Сумма всех цифр даты.
-
-     24.06.1987
-
-     2+4+0+6+1+9+8+7 = 37
-  --------------------------------------------------- */
-
-  const first =
-    dateDigits.reduce(
-      (sum,digit)=>sum + digit,
-      0
-    );
-
-
-  /* ---------------------------------------------------
-     2. ВТОРОЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
-
-     Сумма цифр первого числа.
-
-     37 → 3+7 = 10
-
-     ВАЖНО:
-     10 здесь сохраняется.
-  --------------------------------------------------- */
-
-  const second =
-    sumDigits(first);
-
-
-  /* ---------------------------------------------------
-     3. ТРЕТЬЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
-
-     Сводим второе число:
-
-     10 → 1+0 = 1
-  --------------------------------------------------- */
-
-  const third =
-    sumDigits(second);
-
-
-  /* ---------------------------------------------------
-     4. ЧЕТВЁРТОЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
-
-     Первое число минус:
-
-     2 × первая цифра дня рождения.
-
-     Для 24:
-
-     первая цифра = 2
-
-     37 - (2 × 2)
-     = 37 - 4
-     = 33
-  --------------------------------------------------- */
-
-  const dayString =
-    String(day).padStart(2,'0');
-
-  const firstDayDigit =
-    Number(dayString[0]);
-
-
-  const fourth =
-    first - (2 * firstDayDigit);
-
-
-  /* ---------------------------------------------------
-     5. ПЯТОЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
-
-     33 → 3+3 = 6
-  --------------------------------------------------- */
-
-  const fifth =
-    sumDigits(fourth);
-
-
-  /* ---------------------------------------------------
-     ПЯТЬ ДОПОЛНИТЕЛЬНЫХ ЧИСЕЛ
-
-     37 / 10 / 1 / 33 / 6
-  --------------------------------------------------- */
-
-  const additionalNumbers = [
-    first,
-    second,
-    third,
-    fourth,
-    fifth
-  ];
-
-
-  /* ---------------------------------------------------
-     ФОРМИРУЕМ НАБОР ЦИФР ДЛЯ ПСИХОМАТРИЦЫ
-
-     В матрицу идут:
-
-     1. цифры даты рождения
-     2. цифры первого дополнительного
-     3. цифры второго
-     4. цифры третьего
-     5. цифры четвёртого
-     6. цифры пятого
-
-     Нули не учитываются.
-  --------------------------------------------------- */
-
-  let allDigits = [];
-
-
-  // цифры даты
-  allDigits = allDigits.concat(
-    dateString
-      .split('')
-      .map(Number)
-  );
-
-
-  // цифры пяти дополнительных чисел
-  additionalNumbers.forEach(number => {
-
-    String(Math.abs(number))
-      .split('')
-      .forEach(digit => {
-
-        allDigits.push(Number(digit));
-
-      });
-
-  });
-
-
-  /* ---------------------------------------------------
-     СЧИТАЕМ КОЛИЧЕСТВО ЦИФР 1–9
-  --------------------------------------------------- */
-
-  const counts = {
-    1:0,
-    2:0,
-    3:0,
-    4:0,
-    5:0,
-    6:0,
-    7:0,
-    8:0,
-    9:0
-  };
-
-
-  allDigits.forEach(digit => {
-
-    if(digit >= 1 && digit <= 9){
-
-      counts[digit]++;
-
+        return;
     }
 
-  });
+
+    const [year,month,day] =
+        value.split('-').map(Number);
 
 
-  /* ---------------------------------------------------
-     НАЗВАНИЯ КЛЕТОК
-  --------------------------------------------------- */
+    if(!year || !month || !day){
 
-  const names = {
+        error.textContent = 'Проверьте дату.';
 
-    1:'Характер',
-    2:'Энергия',
-    3:'Интерес',
-    4:'Здоровье',
-    5:'Логика',
-    6:'Труд',
-    7:'Удача',
-    8:'Долг',
-    9:'Память'
-
-  };
+        return;
+    }
 
 
-  /* ---------------------------------------------------
-     СТРОИМ ПСИХОМАТРИЦУ
+    /*
+    КЛАССИЧЕСКИЙ РАСЧЁТ
 
-     Порядок:
+    1. Первое дополнительное число —
+       сумма всех цифр даты.
 
-     1 4 7
-     2 5 8
-     3 6 9
-  --------------------------------------------------- */
+    2. Второе дополнительное число —
+       сумма цифр первого.
 
-  const matrix =
-    document.getElementById('matrix');
+    3. Третье дополнительное число —
+       сумма цифр второго.
 
-  matrix.innerHTML = '';
+    4. Четвёртое дополнительное число —
+       первое дополнительное число
+       минус удвоенная первая значимая
+       цифра дня рождения.
 
-
-  [
-    1,4,7,
-    2,5,8,
-    3,6,9
-  ].forEach(number => {
-
-
-    const cell =
-      document.createElement('div');
-
-    cell.className = 'cell';
+    5. Пятое дополнительное число —
+       сумма цифр четвёртого.
+    */
 
 
-    cell.innerHTML = `
+    const dateString =
+        String(day).padStart(2,'0') +
+        String(month).padStart(2,'0') +
+        String(year);
 
-      <div class="num">
-        ${number} — ${names[number]}
-      </div>
 
-      <div class="val">
-        ${
-          counts[number]
-            ? String(number).repeat(counts[number])
-            : '—'
+    const dateDigits =
+        dateString.split('').map(Number);
+
+
+    // Первое дополнительное число
+    const first =
+        dateDigits.reduce(
+            (sum,digit)=>sum + digit,
+            0
+        );
+
+
+    // Второе дополнительное число
+    const second =
+        sumDigits(first);
+
+
+    // Третье дополнительное число
+    const third =
+        sumDigits(second);
+
+
+    /*
+    Для 06 берём 6, а не 0.
+    Для 24 берём 2.
+    Для 18 берём 1.
+    */
+    const firstSignificantDayDigit =
+        day < 10
+        ? day
+        : Number(String(day)[0]);
+
+
+    // Четвёртое дополнительное число
+    const fourth =
+        first -
+        (2 * firstSignificantDayDigit);
+
+
+    // Пятое дополнительное число
+    const fifth =
+        sumDigits(fourth);
+
+
+    /*
+    В психоматрицу идут:
+    - цифры даты рождения;
+    - все пять дополнительных чисел.
+
+    Нули исключаются.
+    */
+
+    const matrixDigits = [
+
+        ...dateDigits,
+
+        ...String(first)
+            .split('')
+            .map(Number),
+
+        ...String(second)
+            .split('')
+            .map(Number),
+
+        ...String(third)
+            .split('')
+            .map(Number),
+
+        ...String(Math.abs(fourth))
+            .split('')
+            .map(Number),
+
+        ...String(fifth)
+            .split('')
+            .map(Number)
+
+    ].filter(number => number !== 0);
+
+
+    /*
+    Подсчитываем количество каждой цифры.
+    */
+
+    const counts = {
+
+        1:0,
+        2:0,
+        3:0,
+        4:0,
+        5:0,
+        6:0,
+        7:0,
+        8:0,
+        9:0
+
+    };
+
+
+    matrixDigits.forEach(number => {
+
+        if(number >= 1 && number <= 9){
+
+            counts[number]++;
+
         }
-      </div>
 
-    `;
-
-
-    matrix.appendChild(cell);
-
-  });
+    });
 
 
-  /* ---------------------------------------------------
-     ПОКАЗЫВАЕМ ПЯТЬ ДОПОЛНИТЕЛЬНЫХ ЧИСЕЛ
-  --------------------------------------------------- */
+    /*
+    Названия цифр психоматрицы.
+    */
 
-  document.getElementById('extras').innerHTML = `
+    const names = {
 
-    <tr>
-      <td>Первое дополнительное</td>
-      <td><b>${first}</b></td>
-    </tr>
+        1:'Характер',
+        2:'Энергия',
+        3:'Интерес',
+        4:'Здоровье',
+        5:'Логика',
+        6:'Труд',
+        7:'Удача',
+        8:'Долг',
+        9:'Память'
 
-    <tr>
-      <td>Второе дополнительное</td>
-      <td><b>${second}</b></td>
-    </tr>
-
-    <tr>
-      <td>Третье дополнительное</td>
-      <td><b>${third}</b></td>
-    </tr>
-
-    <tr>
-      <td>Четвёртое дополнительное</td>
-      <td><b>${fourth}</b></td>
-    </tr>
-
-    <tr>
-      <td>Пятое дополнительное</td>
-      <td><b>${fifth}</b></td>
-    </tr>
-
-  `;
+    };
 
 
-  /* ---------------------------------------------------
-     ПОКАЗЫВАЕМ ФОРМУЛУ
-  --------------------------------------------------- */
+    /*
+    Строим психоматрицу.
+    */
 
-  document.getElementById('formulaText').innerHTML = `
-
-    ${first}
-    → ${second}
-    → ${third}
-
-    &nbsp;&nbsp; / &nbsp;&nbsp;
-
-    ${first} −
-    (2 × ${firstDayDigit})
-    = ${fourth}
-    → ${fifth}
-
-    <br>
-
-    <strong>
-      Дополнительные числа:
-      ${first} / ${second} / ${third} / ${fourth} / ${fifth}
-    </strong>
-
-  `;
+    const matrix =
+        document.getElementById('matrix');
 
 
-  /* ---------------------------------------------------
-     ПОКАЗЫВАЕМ РЕЗУЛЬТАТ
-  --------------------------------------------------- */
-
-  document.getElementById('result')
-    .style.display = 'block';
+    matrix.innerHTML = '';
 
 
-  /*
-    Сохраняем результат для кнопки копирования.
-  */
+    /*
+    Расположение клеток:
 
-  window.currentResult = {
+    1 4 7
+    2 5 8
+    3 6 9
+    */
 
-    date:
-      `${String(day).padStart(2,'0')}.${String(month).padStart(2,'0')}.${year}`,
+    [1,4,7,2,5,8,3,6,9]
+        .forEach(number => {
 
-    additional:
-      additionalNumbers.join(' / '),
+            const cell =
+                document.createElement('div');
 
-    counts:
-      counts
+            cell.className = 'cell';
 
-  };
+
+            cell.innerHTML = `
+
+                <div class="num">
+                    ${number} — ${names[number]}
+                </div>
+
+                <div class="val">
+                    ${
+                        String(number)
+                        .repeat(counts[number])
+                        || '—'
+                    }
+                </div>
+
+            `;
+
+
+            matrix.appendChild(cell);
+
+        });
+
+
+    /*
+    Дополнительные числа.
+
+    Показываем только результат,
+    без промежуточных формул.
+    */
+
+    document.getElementById('extras')
+        .textContent =
+        `${first} / ${second} / ${third} / ${fourth} / ${fifth}`;
+
+
+    /*
+    Дополнительные показатели.
+    */
+
+    const indicators = [
+
+        [
+            'Темперамент',
+            '3 + 5 + 7',
+            counts[3] +
+            counts[5] +
+            counts[7]
+        ],
+
+        [
+            'Быт',
+            '4 + 5 + 6',
+            counts[4] +
+            counts[5] +
+            counts[6]
+        ],
+
+        [
+            'Целеустремлённость',
+            '1 + 4 + 7',
+            counts[1] +
+            counts[4] +
+            counts[7]
+        ],
+
+        [
+            'Семья',
+            '2 + 5 + 8',
+            counts[2] +
+            counts[5] +
+            counts[8]
+        ],
+
+        [
+            'Привычки',
+            '3 + 6 + 9',
+            counts[3] +
+            counts[6] +
+            counts[9]
+        ],
+
+        [
+            'Стабильность',
+            '1 + 5 + 9',
+            counts[1] +
+            counts[5] +
+            counts[9]
+        ]
+
+    ];
+
+
+    document.getElementById('indicators')
+        .innerHTML =
+
+        indicators.map(item => `
+
+            <tr>
+
+                <td>${item[0]}</td>
+
+                <td>${item[1]}</td>
+
+                <td>
+                    <b>${item[2]}</b>
+                </td>
+
+            </tr>
+
+        `).join('');
+
+
+    /*
+    Показываем результат.
+    */
+
+    document.getElementById('result')
+        .style.display = 'block';
 
 }
 
 
-/* -------------------------------------------------------
-   КОПИРОВАНИЕ РЕЗУЛЬТАТА
-------------------------------------------------------- */
+/*
+Кнопка "Скопировать результат".
+*/
 
 function copyResult(){
 
-  if(!window.currentResult){
-
-    return;
-
-  }
+    const text =
+        document.getElementById('result')
+        .innerText;
 
 
-  const r = window.currentResult;
+    navigator.clipboard
+        .writeText(text)
+        .then(() => {
 
+            alert('Результат скопирован.');
 
-  const matrixText = [
-
-    `1: ${r.counts[1] ? String(1).repeat(r.counts[1]) : '—'}`,
-    `2: ${r.counts[2] ? String(2).repeat(r.counts[2]) : '—'}`,
-    `3: ${r.counts[3] ? String(3).repeat(r.counts[3]) : '—'}`,
-    `4: ${r.counts[4] ? String(4).repeat(r.counts[4]) : '—'}`,
-    `5: ${r.counts[5] ? String(5).repeat(r.counts[5]) : '—'}`,
-    `6: ${r.counts[6] ? String(6).repeat(r.counts[6]) : '—'}`,
-    `7: ${r.counts[7] ? String(7).repeat(r.counts[7]) : '—'}`,
-    `8: ${r.counts[8] ? String(8).repeat(r.counts[8]) : '—'}`,
-    `9: ${r.counts[9] ? String(9).repeat(r.counts[9]) : '—'}`
-
-  ].join('\n');
-
-
-  const text =
-
-`Психоматрица
-
-Дата рождения: ${r.date}
-
-Дополнительные числа:
-${r.additional}
-
-${matrixText}`;
-
-
-  navigator.clipboard
-    .writeText(text)
-    .then(() => {
-
-      alert('Результат скопирован.');
-
-    })
-    .catch(() => {
-
-      alert('Не удалось скопировать результат.');
-
-    });
+        });
 
 }
 
@@ -646,4 +564,3 @@ ${matrixText}`;
 
 </body>
 </html>
-```
