@@ -3,594 +3,582 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+⠀
 <title>Мой калькулятор психоматрицы</title>
-
+⠀
 <style>
-  body{
-    font-family:Arial,sans-serif;
-    max-width:760px;
-    margin:0 auto;
-    padding:24px;
-    background:#f7f5f2;
-    color:#222
-  }
-
-  .card{
-    background:white;
-    border-radius:18px;
-    padding:24px;
-    box-shadow:0 4px 20px rgba(0,0,0,.08)
-  }
-
-  h1{
-    margin-top:0
-  }
-
-  input,button{
-    font-size:18px;
-    padding:12px;
-    border-radius:10px
-  }
-
-  input{
-    border:1px solid #ccc;
-    width:220px
-  }
-
-  button{
-    border:0;
-    background:#222;
-    color:white;
-    cursor:pointer;
-    margin-left:8px
-  }
-
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:10px;
-    margin:20px 0
-  }
-
-  .cell{
-    border:1px solid #ddd;
-    border-radius:12px;
-    padding:14px;
-    text-align:center
-  }
-
-  .num{
-    font-size:13px;
-    color:#777
-  }
-
-  .val{
-    font-size:24px;
-    font-weight:bold;
-    margin-top:6px
-  }
-
-  table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:18px
-  }
-
-  td{
-    padding:8px;
-    border-bottom:1px solid #eee
-  }
-
-  .error{
-    color:#b00020;
-    margin-top:12px
-  }
-
-  .copy{
-    background:#555;
-    margin:16px 0 0 0
-  }
-
-  small{
-    color:#666
-  }
-
-  .extra-numbers{
-    font-size:22px;
-    font-weight:bold;
-    padding:12px 0
-  }
-
-  @media(max-width:600px){
-    body{
-      padding:14px
-    }
-
-    .card{
-      padding:18px
-    }
-
-    input{
-      width:calc(100% - 28px);
-      margin-bottom:10px
-    }
-
-    button{
-      margin-left:0
-    }
-
-    .grid{
-      gap:7px
-    }
-
-    .cell{
-      padding:10px 5px
-    }
-
-    .val{
-      font-size:20px
-    }
-  }
+body{
+font-family:Arial,sans-serif;
+max-width:760px;
+margin:0 auto;
+padding:24px;
+background:#f7f5f2;
+color:#222
+}
+⠀
+.card{
+background:white;
+border-radius:18px;
+padding:24px;
+box-shadow:0 4px 20px rgba(0,0,0,.08)
+}
+⠀
+h1{
+margin-top:0
+}
+⠀
+input,button{
+font-size:18px;
+padding:12px;
+border-radius:10px
+}
+⠀
+input{
+border:1px solid #ccc;
+width:220px
+}
+⠀
+button{
+border:0;
+background:#222;
+color:white;
+cursor:pointer;
+margin-left:8px
+}
+⠀
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin:20px 0
+}
+⠀
+.cell{
+border:1px solid #ddd;
+border-radius:12px;
+padding:14px;
+text-align:center
+}
+⠀
+.num{
+font-size:13px;
+color:#777
+}
+⠀
+.val{
+font-size:24px;
+font-weight:bold;
+margin-top:6px
+}
+⠀
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:18px
+}
+⠀
+td{
+padding:8px;
+border-bottom:1px solid #eee
+}
+⠀
+.error{
+color:#b00020;
+margin-top:12px
+}
+⠀
+.copy{
+background:#555;
+margin:16px 0 0 0
+}
+⠀
+small{
+color:#666
+}
+⠀
+.extra-numbers{
+font-size:22px;
+font-weight:bold;
+padding:12px 0
+}
+⠀
+@media(max-width:600px){
+body{
+padding:14px
+}
+⠀
+.card{
+padding:18px
+}
+⠀
+input{
+width:calc(100% - 28px);
+margin-bottom:10px
+}
+⠀
+button{
+margin-left:0
+}
+⠀
+.grid{
+gap:7px
+}
+⠀
+.cell{
+padding:10px 5px
+}
+⠀
+.val{
+font-size:20px
+}
+}
 </style>
-
+⠀
 </head>
-
+⠀
 <body>
-
+⠀
 <div class="card">
-
-  <h1>Калькулятор психоматрицы</h1>
-
-  <p>
-    Введите дату рождения и получите расчёт психоматрицы.
-  </p>
-
-  <div>
-    <input id="date" type="date">
-    <button onclick="calculate()">Рассчитать</button>
-  </div>
-
-  <div id="error" class="error"></div>
-
-  <div id="result" style="display:none">
-
-    <h2>Результат</h2>
-
-    <div class="grid" id="matrix"></div>
-
-    <h3>Дополнительные числа</h3>
-
-    <div id="extras" class="extra-numbers"></div>
-
-    <h3>Дополнительные показатели</h3>
-
-    <table id="indicators"></table>
-
-    <button class="copy" onclick="copyResult()">
-      Скопировать результат
-    </button>
-
-    <p>
-      <small>
-        Нули в ячейки психоматрицы не заносятся.
-      </small>
-    </p>
-
-  </div>
-
+⠀
+<h1>Калькулятор психоматрицы</h1>
+⠀
+<p>
+Введите дату рождения и получите расчёт психоматрицы.
+</p>
+⠀
+<div>
+<input id="date" type="date">
+<button onclick="calculate()">Рассчитать</button>
 </div>
-
-
+⠀
+<div id="error" class="error"></div>
+⠀
+<div id="result" style="display:none">
+⠀
+<h2>Результат</h2>
+⠀
+<div class="grid" id="matrix"></div>
+⠀
+<h3>Дополнительные числа</h3>
+⠀
+<div id="extras" class="extra-numbers"></div>
+⠀
+<h3>Дополнительные показатели</h3>
+⠀
+<table id="indicators"></table>
+⠀
+<button class="copy" onclick="copyResult()">
+Скопировать результат
+</button>
+⠀
+<p>
+<small>
+Нули в ячейки психоматрицы не заносятся.
+</small>
+</p>
+⠀
+</div>
+⠀
+</div>
+⠀
+⠀
 <script>
-
+⠀
 function sumDigits(n){
-
-  return String(Math.abs(n))
-    .split('')
-    .reduce((s,d)=>s+Number(d),0);
-
+⠀
+return String(Math.abs(n))
+.split('')
+.reduce((s,d)=>s+Number(d),0);
+⠀
 }
-
-
+⠀
+⠀
 function calculate(){
-
-  const val =
-    document.getElementById('date').value;
-
-  const err =
-    document.getElementById('error');
-
-  err.textContent = '';
-
-
-  if(!val){
-
-    err.textContent =
-      'Введите дату рождения.';
-
-    return;
-
-  }
-
-
-  const [y,m,d] =
-    val.split('-').map(Number);
-
-
-  if(!y || !m || !d){
-
-    err.textContent =
-      'Проверьте дату.';
-
-    return;
-
-  }
-
-
-  /*
-    Дата рождения.
-    Например:
-    24.06.1987
-  */
-
-  const ds =
-    String(d).padStart(2,'0') +
-    String(m).padStart(2,'0') +
-    String(y);
-
-
-  const digits =
-    ds.split('').map(Number);
-
-
-  /*
-    ПЕРВОЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
-
-    Сумма всех цифр даты.
-
-    24.06.1987:
-    2+4+0+6+1+9+8+7 = 37
-  */
-
-  const A =
-    digits.reduce(
-      (a,b)=>a+b,
-      0
-    );
-
-
-  /*
-    ВТОРОЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
-
-    Сумма цифр первого.
-
-    37 → 3+7 = 10
-  */
-
-  const B =
-    sumDigits(A);
-
-
-  /*
-    ТРЕТЬЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
-
-    Сумма цифр второго.
-
-    10 → 1+0 = 1
-  */
-
-  const C =
-    sumDigits(B);
-
-
-  /*
-    ЧЕТВЁРТОЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
-
-    Первое дополнительное
-    минус 2 × первая значимая
-    цифра дня рождения.
-
-    Для 24 берём 2.
-
-    37 - (2 × 2) = 33
-  */
-
-  const firstDayDigit =
-    d < 10
-      ? d
-      : Number(String(d)[0]);
-
-
-  const D =
-    A - (2 * firstDayDigit);
-
-
-  /*
-    ПЯТОЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
-
-    Сумма цифр четвёртого.
-
-    33 → 3+3 = 6
-  */
-
-  const E =
-    sumDigits(D);
-
-
-  /*
-    ПСИХОМАТРИЦА
-
-    Берём:
-    - все цифры даты;
-    - первое дополнительное;
-    - второе;
-    - третье;
-    - четвёртое;
-    - пятое.
-
-    Нули исключаем.
-  */
-
-  const all = [];
-
-  digits.forEach(x=>{
-
-    if(x !== 0){
-      all.push(x);
-    }
-
-  });
-
-
-  [
-    A,
-    B,
-    C,
-    D,
-    E
-  ].forEach(number=>{
-
-    String(Math.abs(number))
-      .split('')
-      .map(Number)
-      .forEach(x=>{
-
-        if(x !== 0){
-          all.push(x);
-        }
-
-      });
-
-  });
-
-
-  /*
-    Считаем количество каждой цифры.
-  */
-
-  const counts = {
-    1:0,
-    2:0,
-    3:0,
-    4:0,
-    5:0,
-    6:0,
-    7:0,
-    8:0,
-    9:0
-  };
-
-
-  all.forEach(x=>{
-
-    if(x>=1 && x<=9){
-
-      counts[x]++;
-
-    }
-
-  });
-
-
-  /*
-    Названия цифр.
-  */
-
-  const names = {
-
-    1:'Характер',
-    2:'Энергия',
-    3:'Интерес',
-    4:'Здоровье',
-    5:'Логика',
-    6:'Труд',
-    7:'Удача',
-    8:'Долг',
-    9:'Память'
-
-  };
-
-
-  /*
-    Строим психоматрицу.
-  */
-
-  const matrix =
-    document.getElementById('matrix');
-
-
-  matrix.innerHTML = '';
-
-
-  /*
-    Расположение:
-
-    1 | 4 | 7
-    2 | 5 | 8
-    3 | 6 | 9
-  */
-
-  [1,4,7,2,5,8,3,6,9]
-    .forEach(n=>{
-
-      const c =
-        document.createElement('div');
-
-
-      c.className = 'cell';
-
-
-      c.innerHTML = `
-
-        <div class="num">
-          ${n} — ${names[n]}
-        </div>
-
-        <div class="val">
-          ${
-            String(n).repeat(counts[n])
-            || '—'
-          }
-        </div>
-
-      `;
-
-
-      matrix.appendChild(c);
-
-    });
-
-
-  /*
-    ДОПОЛНИТЕЛЬНЫЕ ЧИСЛА
-
-    Для 24.06.1987:
-
-    37 / 10 / 1 / 33 / 6
-
-    Ровно пять чисел.
-  */
-
-  document.getElementById('extras')
-    .textContent =
-      `${A} / ${B} / ${C} / ${D} / ${E}`;
-
-
-  /*
-    ДОПОЛНИТЕЛЬНЫЕ ПОКАЗАТЕЛИ
-
-    Оставляем именно те,
-    которые были в старом калькуляторе.
-  */
-
-  const indicators = [
-
-    [
-      'Темперамент',
-      '3 + 5 + 7',
-      counts[3] +
-      counts[5] +
-      counts[7]
-    ],
-
-    [
-      'Быт',
-      '4 + 5 + 6',
-      counts[4] +
-      counts[5] +
-      counts[6]
-    ],
-
-    [
-      'Целеустремлённость',
-      '1 + 4 + 7',
-      counts[1] +
-      counts[4] +
-      counts[7]
-    ],
-
-    [
-      'Семья',
-      '2 + 5 + 8',
-      counts[2] +
-      counts[5] +
-      counts[8]
-    ],
-
-    [
-      'Привычки',
-      '3 + 6 + 9',
-      counts[3] +
-      counts[6] +
-      counts[9]
-    ],
-
-    [
-      'Стабильность',
-      '3 + 6 + 9',
-      counts[3] +
-      counts[6] +
-      counts[9]
-    ]
-
-  ];
-
-
-  document.getElementById('indicators')
-    .innerHTML =
-
-      indicators
-        .map(x=>`
-
-          <tr>
-
-            <td>${x[0]}</td>
-
-            <td>${x[1]}</td>
-
-            <td>
-              <b>${x[2]}</b>
-            </td>
-
-          </tr>
-
-        `)
-        .join('');
-
-
-  /*
-    Показываем результат.
-  */
-
-  document.getElementById('result')
-    .style.display = 'block';
-
+⠀
+const val =
+document.getElementById('date').value;
+⠀
+const err =
+document.getElementById('error');
+⠀
+err.textContent = '';
+⠀
+⠀
+if(!val){
+⠀
+err.textContent =
+'Введите дату рождения.';
+⠀
+return;
+⠀
 }
-
-
+⠀
+⠀
+const [y,m,d] =
+val.split('-').map(Number);
+⠀
+⠀
+if(!y || !m || !d){
+⠀
+err.textContent =
+'Проверьте дату.';
+⠀
+return;
+⠀
+}
+⠀
+⠀
 /*
-  Копирование результата.
+Дата рождения.
+Например:
+24.06.1987
 */
-
-function copyResult(){
-
-  const text =
-    document.getElementById('result')
-      .innerText;
-
-
-  navigator.clipboard
-    .writeText(text)
-    .then(()=>{
-
-      alert('Результат скопирован.');
-
-    });
-
+⠀
+const ds =
+String(d).padStart(2,'0') +
+String(m).padStart(2,'0') +
+String(y);
+⠀
+⠀
+const digits =
+ds.split('').map(Number);
+⠀
+⠀
+/*
+ПЕРВОЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
+⠀
+Сумма всех цифр даты.
+*/
+⠀
+const A =
+digits.reduce(
+(a,b)=>a+b,
+0
+);
+⠀
+⠀
+/*
+ВТОРОЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
+*/
+⠀
+const B =
+sumDigits(A);
+⠀
+⠀
+/*
+ТРЕТЬЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
+⠀
+Сумма цифр второго.
+*/
+⠀
+const C =
+sumDigits(B);
+⠀
+⠀
+/*
+ЧЕТВЁРТОЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
+⠀
+Первое дополнительное
+минус 2 × первая значимая
+цифра дня рождения.
+⠀
+Для 24 берём 2.
+Для 06 берём 6.
+*/
+⠀
+const firstDayDigit =
+d < 10
+? d
+: Number(String(d)[0]);
+⠀
+⠀
+const D =
+A - (2 * firstDayDigit);
+⠀
+⠀
+/*
+ПЯТОЕ ДОПОЛНИТЕЛЬНОЕ ЧИСЛО
+⠀
+Сумма цифр четвёртого.
+*/
+⠀
+const E =
+sumDigits(D);
+⠀
+⠀
+/*
+ПСИХОМАТРИЦА
+⠀
+Берём:
+- все цифры даты;
+- первое дополнительное;
+- второе;
+- третье;
+- четвёртое;
+- пятое.
+⠀
+Нули исключаем.
+*/
+⠀
+const all =
+digits
+.filter(x=>x!==0)
+⠀
+.concat(
+String(A)
+.split('')
+.map(Number)
+)
+⠀
+.concat(
+String(B)
+.split('')
+.map(Number)
+)
+⠀
+.concat(
+String(C)
+.split('')
+.map(Number)
+)
+⠀
+.concat(
+String(Math.abs(D))
+.split('')
+.map(Number)
+)
+⠀
+.concat(
+String(E)
+.split('')
+.map(Number)
+);
+⠀
+⠀
+/*
+Считаем количество каждой цифры.
+*/
+⠀
+const counts = {
+1:0,
+2:0,
+3:0,
+4:0,
+5:0,
+6:0,
+7:0,
+8:0,
+9:0
+};
+⠀
+⠀
+all.forEach(x=>{
+⠀
+if(x>=1 && x<=9){
+⠀
+counts[x]++;
+⠀
 }
-
+⠀
+});
+⠀
+⠀
+/*
+Названия цифр.
+*/
+⠀
+const names = {
+⠀
+1:'Характер',
+2:'Энергия',
+3:'Интерес',
+4:'Здоровье',
+5:'Логика',
+6:'Труд',
+7:'Удача',
+8:'Долг',
+9:'Память'
+⠀
+};
+⠀
+⠀
+/*
+Строим психоматрицу.
+*/
+⠀
+const matrix =
+document.getElementById('matrix');
+⠀
+⠀
+matrix.innerHTML = '';
+⠀
+⠀
+/*
+Расположение:
+⠀
+1 | 4 | 7
+2 | 5 | 8
+3 | 6 | 9
+*/
+⠀
+[1,4,7,2,5,8,3,6,9]
+.forEach(n=>{
+⠀
+const c =
+document.createElement('div');
+⠀
+⠀
+c.className = 'cell';
+⠀
+⠀
+c.innerHTML = `
+⠀
+<div class="num">
+${n} — ${names[n]}
+</div>
+⠀
+<div class="val">
+${
+String(n).repeat(counts[n])
+|| '—'
+}
+</div>
+⠀
+`;
+⠀
+⠀
+matrix.appendChild(c);
+⠀
+});
+⠀
+⠀
+/*
+ДОПОЛНИТЕЛЬНЫЕ ЧИСЛА
+⠀
+Только числа.
+Без формул.
+Без "Числа судьбы".
+*/
+⠀
+document.getElementById('extras')
+.textContent =
+`${A} / ${B} / ${C} / ${D} / ${E}`;
+⠀
+⠀
+/*
+ДОПОЛНИТЕЛЬНЫЕ ПОКАЗАТЕЛИ
+⠀
+Оставляем именно те,
+которые были в старом калькуляторе.
+*/
+⠀
+const indicators = [
+⠀
+[
+'Темперамент',
+'3 + 5 + 7',
+counts[3] +
+counts[5] +
+counts[7]
+],
+⠀
+[
+'Быт',
+'4 + 5 + 6',
+counts[4] +
+counts[5] +
+counts[6]
+],
+⠀
+[
+'Целеустремлённость',
+'1 + 4 + 7',
+counts[1] +
+counts[4] +
+counts[7]
+],
+⠀
+[
+'Семья',
+'2 + 5 + 8',
+counts[2] +
+counts[5] +
+counts[8]
+],
+⠀
+[
+'Привычки',
+'3 + 6 + 9',
+counts[3] +
+counts[6] +
+counts[9]
+],
+⠀
+[
+'Стабильность',
+'3 + 6 + 9',
+counts[3] +
+counts[6] +
+counts[9]
+]
+⠀
+];
+⠀
+⠀
+document.getElementById('indicators')
+.innerHTML =
+⠀
+indicators
+.map(x=>`
+⠀
+<tr>
+⠀
+<td>${x[0]}</td>
+⠀
+<td>${x[1]}</td>
+⠀
+<td>
+<b>${x[2]}</b>
+</td>
+⠀
+</tr>
+⠀
+`)
+.join('');
+⠀
+⠀
+/*
+Показываем результат.
+*/
+⠀
+document.getElementById('result')
+.style.display = 'block';
+⠀
+}
+⠀
+⠀
+/*
+Копирование результата.
+*/
+⠀
+function copyResult(){
+⠀
+const text =
+document.getElementById('result')
+.innerText;
+⠀
+⠀
+navigator.clipboard
+.writeText(text)
+.then(()=>{
+⠀
+alert('Результат скопирован.');
+⠀
+});
+⠀
+}
+⠀
 </script>
-
+⠀
 </body>
 </html>
