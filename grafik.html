@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Психоэмоциональный график года</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f7f4f1;
+    color: #2d2927;
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 25px 15px 50px;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.06);
+}
+
+h1 {
+    font-size: 30px;
+    margin: 0 0 10px;
+}
+
+h2 {
+    font-size: 22px;
+    margin-top: 0;
+}
+
+.subtitle {
+    color: #777;
+    margin-bottom: 25px;
+}
+
+.form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 7px;
+}
+
+input {
+    width: 100%;
+    height: 48px;
+    border: 1px solid #d8d2cc;
+    border-radius: 12px;
+    padding: 0 14px;
+    font-size: 16px;
+}
+
+button {
+    grid-column: 1 / -1;
+    height: 50px;
+    border: none;
+    border-radius: 12px;
+    background: #2d2927;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.error {
+    display: none;
+    color: #b33b3b;
+    margin-top: 12px;
+}
+
+.calculation {
+    background: #f5f1ed;
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 15px;
+    overflow-wrap: anywhere;
+}
+
+.final-number {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 10px;
+    letter-spacing: 1px;
+}
+
+.hidden {
+    display: none;
+}
+
+.chart-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+svg {
+    width: 100%;
+    min-width: 700px;
+    height: 350px;
+}
+
+.months {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.month {
+    border: 1px solid #e5dfda;
+    border-radius: 16px;
+    padding: 17px;
+}
+
+.month-name {
+    font-weight: bold;
+    font-size: 17px;
+}
+
+.number {
+    font-size: 32px;
+    font-weight: bold;
+    margin: 5px 0 10px;
+}
+
+.description {
+    color: #5e5854;
+    font-size: 14px;
+}
+
+.note {
+    color: #777;
+    font-size: 13px;
+}
+
+@media (max-width: 700px) {
+
+    h1 {
+        font-size: 25px;
+    }
+
+    .form {
+        grid-template-columns: 1fr;
+    }
+
+    .months {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 450px) {
+
+    .card {
+        padding: 18px;
+    }
+
+    .months {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>Психоэмоциональный график года</h1>
+
+        <p class="subtitle">
+            Введите дату рождения и год, чтобы рассчитать ваш график на 12 месяцев.
+        </p>
+
+        <div class="form">
+
+            <div>
+                <label for="birthDate">Дата рождения</label>
+
+                <input
+                    type="date"
+                    id="birthDate"
+                >
+            </div>
+
+            <div>
+                <label for="forecastYear">Год прогноза</label>
+
+                <input
+                    type="number"
+                    id="forecastYear"
+                    value="2026"
+                    min="1"
+                    max="9999"
+                >
+            </div>
+
+            <button onclick="calculateGraph()">
+                Рассчитать
+            </button>
+
+        </div>
+
+        <div id="error" class="error"></div>
+
+    </div>
+
+
+    <div id="result" class="hidden">
+
+        <div class="card">
+
+            <h2>Ваш расчёт</h2>
+
+            <div id="calculation" class="calculation"></div>
+
+            <div id="finalNumber" class="final-number"></div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2 id="chartTitle">
+                Психоэмоциональный график
+            </h2>
+
+            <div class="chart-container">
+
+                <svg
+                    id="chart"
+                    viewBox="0 0 850 350"
+                ></svg>
+
+            </div>
+
+            <p class="note">
+                Значение каждой цифры соответствует одному месяцу.
+                Шкала графика — от 0 до 9.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>
+                По месяцам
+            </h2>
+
+            <div
+                id="months"
+                class="months"
+            ></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ==========================================
+   РАСШИФРОВКИ ЗНАЧЕНИЙ ОТ 0 ДО 9
+========================================== */
+
+const descriptions = {
+
+0: `
+Период, когда кажется, что прежняя жизнь больше не работает.
+То, на что вы раньше опирались: привычки, отношения, работа или
+внутренние убеждения — перестаёт давать ощущение устойчивости.
+
+Вы можете чувствовать, что не понимаете, чего хотите, куда двигаться
+и зачем вообще что-то делать. Часто это сопровождается ощущением
+пустоты, усталости, тревоги или внутренней замкнутости.
+
+Это время остановиться и честно взглянуть на свою жизнь.
+Вы начинаете замечать, что прежние способы справляться с трудностями
+больше не помогают, и появляется возможность переосмыслить себя,
+свои цели и ценности.
+
+Задача этого периода — не пытаться сразу всё исправить и не требовать
+от себя действий, на которые пока нет сил. Важно дать себе время
+и пространство.
+
+Риск — пытаться заполнить пустоту активностью, отвлечениями,
+отношениями или решениями, которые не соответствуют вашим настоящим
+потребностям.
+
+В такой период могут происходить значимые события:
+рождение ребёнка, зачатие, развод, болезнь, смена работы или переезд.
+`,
+
+1: `
+Период первых шагов и возвращения к движению.
+
+После паузы или сложного этапа жизни появляется ощущение,
+что движение вперёд снова возможно. Возникает желание что-то менять,
+пробовать новое и действовать.
+
+Появляются идеи и планы, а сама мысль о первом шаге даёт ощущение
+возможности и лёгкости.
+
+Это период новых начинаний, смелости, активности и ответственности.
+
+Важно делать небольшие шаги и позволять себе пробовать новое
+без страха и спешки.
+
+Риск — либо слишком сильно требовать от себя быстрых результатов
+и перегружаться, либо бояться действовать и оставаться в застое.
+`,
+
+2: `
+Период, когда ваше внимание и энергия сосредоточены
+на отношениях с окружающими.
+
+Вы особенно чувствительны к словам, поступкам и эмоциям других людей.
+
+Это время контактов, общения, поддержки и взаимопонимания.
+Вы можете легче находить общий язык с близкими, друзьями,
+коллегами и другими людьми.
+
+Важно учиться быть рядом с другими, не теряя собственной
+индивидуальности.
+
+Риск — слишком сильно зависеть от чужого мнения, подстраиваться
+под окружающих, жертвовать своими потребностями ради отношений
+или бояться конфликтов.
+`,
+
+3: `
+Период лёгкости и желания проявляться.
+
+Хочется делиться мыслями, общаться, участвовать в событиях
+и радоваться жизни.
+
+Появляется интерес к людям, новым знакомствам и событиям вокруг.
+Творческие идеи легче получают воплощение.
+
+Это время общения, самовыражения и новых возможностей.
+
+Тройка также может дать знакомство с нужными и влиятельными людьми,
+нужными специалистами и хорошими профессионалами.
+
+Возможны важные события в личной жизни — знакомство, замужество,
+зачатие или рождение ребёнка.
+
+Риск — распыляться, хвататься за всё сразу и не завершать начатое.
+`,
+
+4: `
+Период, когда особенно важны устойчивость, порядок
+и надёжная основа.
+
+Хочется выстроить привычный ритм жизни, планировать день,
+организовывать пространство и справляться с обязанностями.
+
+Это хорошее время для системных дел, работы с документами,
+бюрократическими структурами и решения юридических вопросов.
+
+Важно создать устойчивый ритм и опору, не превращая их
+в чрезмерный контроль.
+
+Риск — застрять в рутине, бояться перемен и слишком жёстко
+держаться за привычный порядок.
+`,
+
+5: `
+Период, когда появляется желание изменений.
+
+Привычное может переставать приносить удовлетворение,
+и хочется попробовать что-то новое, исследовать возможности
+и двигаться в незнакомом направлении.
+
+Это время экспериментов, свободы, гибкости и новых решений.
+
+Появляется любопытство и готовность к переменам.
+
+Важно меняться осознанно и наблюдать за последствиями
+своих решений.
+
+Риск — импульсивность, хаос, тревога, резкие решения
+и переутомление.
+`,
+
+6: `
+Период, когда внимание сосредоточено на близких и тех,
+за кого вы чувствуете ответственность.
+
+Возрастает потребность заботиться, помогать, поддерживать
+и создавать ощущение тепла и безопасности.
+
+Отношения с близкими становятся особенно значимыми.
+
+Важно заботиться о других, не теряя себя и собственные границы.
+
+Риск — чрезмерная опека, самопожертвование, эмоциональное
+выгорание и ощущение, что ваши усилия остаются незамеченными.
+`,
+
+7: `
+Период, когда особенно важно побыть наедине с собой,
+прислушаться к своим мыслям и эмоциям и переосмыслить происходящее.
+
+Это время внутреннего анализа, восстановления энергии,
+понимания собственных целей и ценностей.
+
+Уединение может помочь обрести ясность мыслей и спокойствие.
+
+Важно дать себе время для паузы и восстановления,
+но не превращать это в полную изоляцию.
+
+Риск — замкнуться, уйти от мира, усилить чувство одиночества
+и потерять баланс между внутренней и внешней жизнью.
+`,
+
+8: `
+Период силы, энергии и готовности брать на себя ответственность.
+
+Возрастает способность концентрироваться, проявлять решимость,
+управлять процессами и добиваться заметных результатов.
+
+В такой период можно хорошо зарабатывать.
+
+Восьмёрка связана с материальной сферой, поэтому это хороший
+период для приобретений и инвестирования.
+
+Важно разумно распределять нагрузку и сохранять баланс
+между активностью и отдыхом.
+
+Риск — чрезмерная требовательность к себе и другим,
+контроль, давление, перегрузка и эмоциональное истощение.
+`,
+
+9: `
+Период подведения итогов, завершения старых дел и отпускания
+того, что больше не служит.
+
+Можно завершать проекты, отношения, старые привычки
+и освобождать место для нового этапа.
+
+Это время осмысления опыта и подведения итогов.
+
+В такой период можно добиться своих максимальных возможностей.
+
+Важно не застревать в прошлом и позволять завершённому
+оставаться в прошлом.
+
+Риск — сожаления, грусть, пассивность и неспособность
+увидеть новые возможности.
+`
+
+};
+
+
+/* ==========================================
+   МЕСЯЦЫ
+========================================== */
+
+const months = [
+
+"Январь",
+"Февраль",
+"Март",
+"Апрель",
+"Май",
+"Июнь",
+"Июль",
+"Август",
+"Сентябрь",
+"Октябрь",
+"Ноябрь",
+"Декабрь"
+
+];
+
+
+/* ==========================================
+   ОСНОВНОЙ РАСЧЁТ
+========================================== */
+
+function calculateGraph() {
+
+    const birthDate =
+        document.getElementById("birthDate").value;
+
+    const year =
+        parseInt(
+            document.getElementById("forecastYear").value
+        );
+
+    const error =
+        document.getElementById("error");
+
+
+    error.style.display = "none";
+
+
+    if (!birthDate || !year) {
+
+        error.textContent =
+            "Введите дату рождения и год прогноза.";
+
+        error.style.display = "block";
+
+        return;
+    }
+
+
+    /*
+       Получаем дату рождения
+    */
+
+    const parts =
+        birthDate.split("-");
+
+    const birthYear =
+        parseInt(parts[0]);
+
+    const birthMonth =
+        parseInt(parts[1]);
+
+    const birthDay =
+        parseInt(parts[2]);
+
+
+    /*
+       Первое число:
+       день + месяц в формате ДДММ
+
+       Например:
+       24.06 → 2406
+    */
+
+    const dayMonth =
+        parseInt(
+            String(birthDay).padStart(2,"0") +
+            String(birthMonth).padStart(2,"0")
+        );
+
+
+    /*
+       Первый этап
+    */
+
+    const first =
+        dayMonth * birthYear;
+
+
+    /*
+       Второй этап
+    */
+
+    const second =
+        first * 12;
+
+
+    /*
+       Третий этап
+    */
+
+    const finalNumber =
+        String(second * year);
+
+
+    /*
+       Получаем 12 цифр.
+
+       Если итоговое число содержит меньше 12 цифр,
+       начинаем повторять цифры сначала.
+    */
+
+    const graphValues = [];
+
+    for (
+        let i = 0;
+        i < 12;
+        i++
+    ) {
+
+        const digit =
+            Number(
+                finalNumber[
+                    i % finalNumber.length
+                ]
+            );
+
+        graphValues.push(digit);
+    }
+
+
+    /*
+       Показываем расчёт
+    */
+
+    document.getElementById("calculation").innerHTML =
+
+        `${dayMonth} × ${birthYear} = ${first}<br>
+         ${first} × 12 = ${second}<br>
+         ${second} × ${year} =`;
+
+
+    document.getElementById("finalNumber")
+        .textContent = finalNumber;
+
+
+    document.getElementById("chartTitle")
+        .textContent =
+        `Психоэмоциональный график на ${year} год`;
+
+
+    /*
+       Строим график
+    */
+
+    drawChart(graphValues);
+
+
+    /*
+       Показываем месяцы
+    */
+
+    showMonths(graphValues);
+
+
+    /*
+       Показываем результат
+    */
+
+    document
+        .getElementById("result")
+        .classList
+        .remove("hidden");
+
+
+    document
+        .getElementById("result")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+}
+
+
+/* ==========================================
+   КАРТОЧКИ МЕСЯЦЕВ
+========================================== */
+
+function showMonths(values) {
+
+    const container =
+        document.getElementById("months");
+
+    container.innerHTML = "";
+
+
+    values.forEach(
+        (value,index) => {
+
+            const month =
+                document.createElement("div");
+
+            month.className = "month";
+
+
+            month.innerHTML = `
+
+                <div class="month-name">
+                    ${months[index]}
+                </div>
+
+                <div class="number">
+                    ${value}
+                </div>
+
+                <div class="description">
+                    ${descriptions[value]}
+                </div>
+
+            `;
+
+
+            container.appendChild(month);
+
+        }
+    );
+}
+
+
+/* ==========================================
+   ПОСТРОЕНИЕ ГРАФИКА
+========================================== */
+
+function drawChart(values) {
+
+    const svg =
+        document.getElementById("chart");
+
+
+    const width = 850;
+    const height = 350;
+
+    const left = 55;
+    const right = 25;
+    const top = 25;
+    const bottom = 60;
+
+
+    const chartWidth =
+        width - left - right;
+
+    const chartHeight =
+        height - top - bottom;
+
+
+    let html = "";
+
+
+    /*
+       Горизонтальные линии
+       от 0 до 9
+    */
+
+    for (
+        let number = 0;
+        number <= 9;
+        number++
+    ) {
+
+        const y =
+            top +
+            chartHeight -
+            (number / 9) *
+            chartHeight;
+
+
+        html += `
+
+            <line
+                x1="${left}"
+                y1="${y}"
+                x2="${width-right}"
+                y2="${y}"
+                stroke="#e5dfda"
+                stroke-width="1"
+            />
+
+            <text
+                x="${left-12}"
+                y="${y+5}"
+                text-anchor="end"
+                font-size="12"
+                fill="#777"
+            >
+                ${number}
+            </text>
+
+        `;
+    }
+
+
+    /*
+       Координаты точек
+    */
+
+    const points =
+        values.map(
+            (value,index) => {
+
+                const x =
+                    left +
+                    (index / 11) *
+                    chartWidth;
+
+
+                const y =
+                    top +
+                    chartHeight -
+                    (value / 9) *
+                    chartHeight;
+
+
+                return {
+                    x:x,
+                    y:y
+                };
+
+            }
+        );
+
+
+    /*
+       Линия графика
+    */
+
+    html += `
+
+        <polyline
+            points="
+                ${points
+                    .map(
+                        point =>
+                        `${point.x},${point.y}`
+                    )
+                    .join(" ")
+                }
+            "
+            fill="none"
+            stroke="#5b514b"
+            stroke-width="3"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        />
+
+    `;
+
+
+    /*
+       Точки и подписи
+    */
+
+    points.forEach(
+        (point,index) => {
+
+            html += `
+
+                <circle
+                    cx="${point.x}"
+                    cy="${point.y}"
+                    r="6"
+                    fill="white"
+                    stroke="#5b514b"
+                    stroke-width="3"
+                />
+
+                <text
+                    x="${point.x}"
+                    y="${point.y-13}"
+                    text-anchor="middle"
+                    font-size="13"
+                    font-weight="bold"
+                >
+                    ${values[index]}
+                </text>
+
+                <text
+                    x="${point.x}"
+                    y="${height-25}"
+                    text-anchor="middle"
+                    font-size="11"
+                    fill="#777"
+                >
+                    ${months[index].substring(0,3)}
+                </text>
+
+            `;
+
+        }
+    );
+
+
+    /*
+       Оси
+    */
+
+    html += `
+
+        <line
+            x1="${left}"
+            y1="${top}"
+            x2="${left}"
+            y2="${top+chartHeight}"
+            stroke="#aaa"
+        />
+
+        <line
+            x1="${left}"
+            y1="${top+chartHeight}"
+            x2="${width-right}"
+            y2="${top+chartHeight}"
+            stroke="#aaa"
+        />
+
+    `;
+
+
+    svg.innerHTML = html;
+}
+
+
+/* ==========================================
+   АВТОМАТИЧЕСКИЙ ПРИМЕР
+========================================== */
+
+/*
+   При открытии калькулятора
+   автоматически подставляем вашу дату.
+
+   Можно удалить этот блок,
+   если хотите, чтобы поля были пустыми.
+*/
+
+document.getElementById("birthDate").value =
+    "1987-06-24";
+
+</script>
+
+</body>
+</html>
