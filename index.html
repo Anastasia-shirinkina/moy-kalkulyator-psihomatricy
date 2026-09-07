@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -202,7 +201,6 @@ return String(Math.abs(n))
 
 }
 
-
 function calculate(){
 
 const val =
@@ -222,7 +220,6 @@ return;
 
 }
 
-
 const [year,month,day] =
 val.split('-').map(Number);
 
@@ -235,11 +232,6 @@ return;
 
 }
 
-
-/* ============================
-   ЦИФРЫ ДАТЫ
-   ============================ */
-
 const dateString =
 String(day).padStart(2,'0') +
 String(month).padStart(2,'0') +
@@ -248,48 +240,14 @@ String(year);
 const dateDigits =
 dateString.split('').map(Number);
 
-
-/* ============================
-   ДОПОЛНИТЕЛЬНЫЕ ЧИСЛА
-   ============================ */
-
-/*
-Первое дополнительное число:
-
-сумма всех цифр даты.
-
-24.06.1987:
-
-2+4+0+6+1+9+8+7 = 37
-*/
-
 const A =
 dateDigits.reduce(
 (sum,digit)=>sum + digit,
 0
 );
 
-
-/*
-Второе дополнительное число:
-
-3+7 = 10
-*/
-
 const B =
 sumDigits(A);
-
-
-/*
-Третье дополнительное число:
-
-37 - (2 × первая значимая
-цифра дня).
-
-Для 24 берём 2:
-
-37 - 4 = 33
-*/
 
 const firstDayDigit =
 day < 10
@@ -299,70 +257,21 @@ day < 10
 const C =
 A - (2 * firstDayDigit);
 
-
-/*
-Четвёртое дополнительное число:
-
-3+3 = 6
-*/
-
 const D =
 sumDigits(C);
 
-
-/*
-ИТОГО:
-
-37 / 10 / 33 / 6
-*/
-
-
-/* ============================
-   СОЗДАНИЕ МАТРИЦЫ
-   ============================ */
-
-/*
-В матрицу попадают:
-
-1. цифры даты;
-2. цифры первого дополнительного
-   числа;
-3. цифры второго;
-4. цифры третьего;
-5. цифры четвёртого.
-
-Нули не заносятся.
-
-Важно:
-
-10 остаётся дополнительным числом,
-и его цифра 1 участвует в матрице.
-
-Но отдельного дополнительного числа
-1 здесь НЕТ.
-*/
+const matrixExtra =
+sumDigits(B);
 
 const allDigits = [];
-
-
-/*
-Добавляем цифры даты.
-*/
 
 dateDigits.forEach(digit=>{
 
 if(digit !== 0){
-
 allDigits.push(digit);
-
 }
 
 });
-
-
-/*
-Добавляем 37.
-*/
 
 String(A)
 .split('')
@@ -370,20 +279,10 @@ String(A)
 .forEach(digit=>{
 
 if(digit !== 0){
-
 allDigits.push(digit);
-
 }
 
 });
-
-
-/*
-Добавляем 10.
-
-Поэтому единица из 10
-участвует в матрице.
-*/
 
 String(B)
 .split('')
@@ -391,35 +290,21 @@ String(B)
 .forEach(digit=>{
 
 if(digit !== 0){
-
 allDigits.push(digit);
-
 }
 
 });
 
-
-/*
-Добавляем 33.
-*/
-
-String(Math.abs(C))
+String(C)
 .split('')
 .map(Number)
 .forEach(digit=>{
 
 if(digit !== 0){
-
 allDigits.push(digit);
-
 }
 
 });
-
-
-/*
-Добавляем 6.
-*/
 
 String(D)
 .split('')
@@ -427,17 +312,14 @@ String(D)
 .forEach(digit=>{
 
 if(digit !== 0){
-
 allDigits.push(digit);
-
 }
 
 });
 
-
-/* ============================
-   ПОДСЧЁТ ЦИФР
-   ============================ */
+if(matrixExtra !== 0){
+allDigits.push(matrixExtra);
+}
 
 const counts = {
 
@@ -453,21 +335,13 @@ const counts = {
 
 };
 
-
 allDigits.forEach(digit=>{
 
 if(digit >= 1 && digit <= 9){
-
 counts[digit]++;
-
 }
 
 });
-
-
-/* ============================
-   НАЗВАНИЯ ЦИФР
-   ============================ */
 
 const names = {
 
@@ -483,16 +357,10 @@ const names = {
 
 };
 
-
-/* ============================
-   ПОСТРОЕНИЕ МАТРИЦЫ
-   ============================ */
-
 const matrix =
 document.getElementById('matrix');
 
 matrix.innerHTML = '';
-
 
 [
 1,4,7,
@@ -509,18 +377,14 @@ cell.className = 'cell';
 cell.innerHTML = `
 
 <div class="num">
-
 ${number} — ${names[number]}
-
 </div>
 
 <div class="val">
-
 ${
 String(number).repeat(counts[number])
 || '—'
 }
-
 </div>
 
 `;
@@ -529,19 +393,9 @@ matrix.appendChild(cell);
 
 });
 
-
-/* ============================
-   ДОПОЛНИТЕЛЬНЫЕ ЧИСЛА
-   ============================ */
-
 document.getElementById('extras')
 .textContent =
 `${A} / ${B} / ${C} / ${D}`;
-
-
-/* ============================
-   ДОПОЛНИТЕЛЬНЫЕ ПОКАЗАТЕЛИ
-   ============================ */
 
 const indicators = [
 
@@ -595,7 +449,6 @@ counts[3]
 
 ];
 
-
 document.getElementById('indicators')
 .innerHTML =
 
@@ -619,20 +472,10 @@ indicators
 
 .join('');
 
-
-/* ============================
-   ПОКАЗЫВАЕМ РЕЗУЛЬТАТ
-   ============================ */
-
 document.getElementById('result')
 .style.display = 'block';
 
 }
-
-
-/* ============================
-   КОПИРОВАНИЕ
-   ============================ */
 
 function copyResult(){
 
@@ -654,14 +497,3 @@ alert('Результат скопирован.');
 
 </body>
 </html>
-```
-
-**Проверка на 24.06.1987 должна дать ровно:**
-
-**Дополнительные числа:**
-`37 / 10 / 33 / 6`
-
-**Матрица:**
-`111 | 2 | 333 | 4 | — | 66 | 77 | 8 | 9`
-
-То есть мы **не убираем единицу из `10` из матрицы**. Мы убираем только отдельное дополнительное число `1`, которое раньше создавалось строкой `const C = sumDigits(B);`. Именно это было лишним. В текущем GitHub-файле сама правильная четырёхчисловая схема уже видна в расчёте `A, B, C, D`.
