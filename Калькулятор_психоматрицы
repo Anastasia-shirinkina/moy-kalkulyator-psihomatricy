@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Психоматрица</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #fff;
+  color: #222;
+  margin: 0;
+  padding: 20px;
+}
+
+.calculator {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+input[type="date"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+button {
+  width: 100%;
+  padding: 13px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 25px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 25px;
+}
+
+td, th {
+  border: 1px solid #ccc;
+  padding: 12px;
+  text-align: center;
+}
+
+th {
+  background: #f5f5f5;
+}
+
+.matrix {
+  max-width: 360px;
+  margin: 0 auto 30px;
+}
+
+.matrix td {
+  width: 33.33%;
+  height: 80px;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.number {
+  font-size: 30px;
+  margin-bottom: 5px;
+}
+
+.name {
+  font-size: 13px;
+  font-weight: normal;
+}
+
+.hidden {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+
+<h1>Психоматрица</h1>
+
+<label for="date">Дата рождения</label>
+
+<input type="date" id="date">
+
+<button onclick="calculate()">Рассчитать</button>
+
+<div id="result" class="hidden">
+
+<table>
+<tbody id="extras"></tbody>
+</table>
+
+<table class="matrix">
+<tbody>
+
+<tr>
+<td id="cell1"></td>
+<td id="cell4"></td>
+<td id="cell7"></td>
+</tr>
+
+<tr>
+<td id="cell2"></td>
+<td id="cell5"></td>
+<td id="cell8"></td>
+</tr>
+
+<tr>
+<td id="cell3"></td>
+<td id="cell6"></td>
+<td id="cell9"></td>
+</tr>
+
+</tbody>
+</table>
+
+<table>
+
+<thead>
+<tr>
+<th>Показатель</th>
+<th>Формула</th>
+<th>Значение</th>
+</tr>
+</thead>
+
+<tbody id="indicators"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+function sumDigits(number) {
+
+return String(Math.abs(number))
+.split('')
+.reduce(function(sum, digit) {
+return sum + Number(digit);
+}, 0);
+
+}
+
+
+function addNumberDigits(number, target) {
+
+String(Math.abs(number))
+.split('')
+.forEach(function(digit) {
+
+const value = Number(digit);
+
+if (value !== 0) {
+target.push(value);
+}
+
+});
+
+}
+
+
+function calculate() {
+
+const dateValue = document.getElementById('date').value;
+
+if (!dateValue) {
+
+alert('Введите дату рождения');
+
+return;
+
+}
+
+
+const parts = dateValue.split('-');
+
+const year = Number(parts[0]);
+const month = Number(parts[1]);
+const day = Number(parts[2]);
+
+
+const dateString =
+String(day).padStart(2, '0') +
+String(month).padStart(2, '0') +
+String(year);
+
+
+const dateDigits = dateString
+.split('')
+.map(Number);
+
+
+const firstAdditional =
+dateDigits.reduce(function(sum, digit) {
+
+return sum + digit;
+
+}, 0);
+
+
+const secondAdditional =
+sumDigits(firstAdditional);
+
+
+const firstDayDigit =
+day < 10
+? day
+: Number(String(day).charAt(0));
+
+
+const thirdAdditional =
+firstAdditional - (2 * firstDayDigit);
+
+
+const fourthAdditional =
+sumDigits(thirdAdditional);
+
+
+const extraNumbers = [];
+
+extraNumbers.push(firstAdditional);
+
+extraNumbers.push(secondAdditional);
+
+
+if (secondAdditional >= 10) {
+
+extraNumbers.push(
+sumDigits(secondAdditional)
+);
+
+}
+
+
+extraNumbers.push(thirdAdditional);
+
+extraNumbers.push(fourthAdditional);
+
+
+if (fourthAdditional >= 10) {
+
+extraNumbers.push(
+sumDigits(fourthAdditional)
+);
+
+}
+
+
+const allDigits = [];
+
+
+dateDigits.forEach(function(digit) {
+
+if (digit !== 0) {
+
+allDigits.push(digit);
+
+}
+
+});
+
+
+addNumberDigits(
+firstAdditional,
+allDigits
+);
+
+
+addNumberDigits(
+secondAdditional,
+allDigits
+);
+
+
+if (secondAdditional >= 10) {
+
+addNumberDigits(
+sumDigits(secondAdditional),
+allDigits
+);
+
+}
+
+
+addNumberDigits(
+thirdAdditional,
+allDigits
+);
+
+
+addNumberDigits(
+fourthAdditional,
+allDigits
+);
+
+
+if (fourthAdditional >= 10) {
+
+addNumberDigits(
+sumDigits(fourthAdditional),
+allDigits
+);
+
+}
+
+
+const counts = {
+
+1: 0,
+2: 0,
+3: 0,
+4: 0,
+5: 0,
+6: 0,
+7: 0,
+8: 0,
+9: 0
+
+};
+
+
+allDigits.forEach(function(digit) {
+
+if (digit >= 1 && digit <= 9) {
+
+counts[digit]++;
+
+}
+
+});
+
+
+const names = {
+
+1: 'Характер',
+2: 'Энергия',
+3: 'Интерес',
+4: 'Здоровье',
+5: 'Логика',
+6: 'Труд',
+7: 'Удача',
+8: 'Долг',
+9: 'Память'
+
+};
+
+
+const matrixOrder = [
+
+1, 4, 7,
+2, 5, 8,
+3, 6, 9
+
+];
+
+
+matrixOrder.forEach(function(number) {
+
+const cell =
+document.getElementById('cell' + number);
+
+const count =
+counts[number];
+
+cell.innerHTML =
+
+'<div class="number">' +
+
+(
+count > 0
+? String(number).repeat(count)
+: '—'
+) +
+
+'</div>' +
+
+'<div class="name">' +
+
+names[number] +
+
+'</div>';
+
+});
+
+
+const indicators = [
+
+[
+'Темперамент',
+'3 + 5 + 7',
+counts[3] + counts[5] + counts[7]
+],
+
+[
+'Быт',
+'4 + 5 + 6',
+counts[4] + counts[5] + counts[6]
+],
+
+[
+'Целеустремлённость',
+'1 + 4 + 7',
+counts[1] + counts[4] + counts[7]
+],
+
+[
+'Семья',
+'2 + 5 + 8',
+counts[2] + counts[5] + counts[8]
+],
+
+[
+'Привычки',
+'3 + 6 + 9',
+counts[3] + counts[6] + counts[9]
+],
+
+[
+'Стабильность',
+'3 + 6 + 9',
+counts[3] + counts[6] + counts[9]
+]
+
+];
+
+
+document.getElementById('indicators').innerHTML =
+
+indicators.map(function(item) {
+
+return (
+
+'<tr>' +
+
+'<td>' + item[0] + '</td>' +
+
+'<td>' + item[1] + '</td>' +
+
+'<td>' + item[2] + '</td>' +
+
+'</tr>'
+
+);
+
+}).join('');
+
+
+document.getElementById('extras').innerHTML =
+
+'<tr>' +
+
+'<td>Дополнительные числа</td>' +
+
+'<td><b>' +
+
+extraNumbers.join(' / ') +
+
+'</b></td>' +
+
+'</tr>';
+
+
+document
+.getElementById('result')
+.classList
+.remove('hidden');
+
+}
+
+</script>
+
+</body>
+</html>
