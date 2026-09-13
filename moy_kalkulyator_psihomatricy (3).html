@@ -97,6 +97,7 @@
   <h1>Психоматрица</h1>
 
   <label for="date">Дата рождения</label>
+
   <input type="date" id="date">
 
   <button onclick="calculate()">Рассчитать</button>
@@ -149,150 +150,229 @@
 
 <script>
 
-function sumDigits(n) {
-  return String(Math.abs(n))
+function sumDigits(number) {
+  return String(Math.abs(number))
     .split('')
-    .reduce((sum, digit) => sum + Number(digit), 0);
+    .reduce(function(sum, digit) {
+      return sum + Number(digit);
+    }, 0);
 }
 
 
-function addDigitsFromNumber(number, array) {
+function addNumberDigits(number, target) {
   String(Math.abs(number))
     .split('')
-    .map(Number)
-    .forEach(digit => {
-      if (digit !== 0) {
-        array.push(digit);
+    .forEach(function(digit) {
+
+      const value = Number(digit);
+
+      if (value !== 0) {
+        target.push(value);
       }
+
     });
 }
 
 
 function calculate() {
 
-  const val = document.getElementById('date').value;
+  const dateValue = document.getElementById('date').value;
 
-  if (!val) {
+  if (!dateValue) {
     alert('Введите дату рождения');
     return;
   }
 
-  const [y, m, d] = val.split('-').map(Number);
+
+  const parts = dateValue.split('-');
+
+  const year = Number(parts[0]);
+  const month = Number(parts[1]);
+  const day = Number(parts[2]);
 
 
-  /* Цифры даты рождения */
+  /* ================================
+     ЦИФРЫ ДАТЫ
+     ================================ */
 
   const dateString =
-    String(d).padStart(2, '0') +
-    String(m).padStart(2, '0') +
-    String(y);
+    String(day).padStart(2, '0') +
+    String(month).padStart(2, '0') +
+    String(year);
 
-  const digits = dateString.split('').map(Number);
-
-
-  /* Дополнительные числа */
-
-  const A = digits.reduce(
-    (sum, digit) => sum + digit,
-    0
-  );
-
-  const B = sumDigits(A);
+  const dateDigits = dateString
+    .split('')
+    .map(Number);
 
 
-  const firstDayDigit =
-    d < 10
-      ? d
-      : Number(String(d)[0]);
-
-
-  const C =
-    A - (2 * firstDayDigit);
-
-  const D =
-    sumDigits(C);
-
-
-  /* Числа для отображения */
-
-  const extraNumbers = [];
-
-  extraNumbers.push(A);
-  extraNumbers.push(B);
-
-  if (B >= 10) {
-    extraNumbers.push(sumDigits(B));
-  }
-
-  extraNumbers.push(C);
-  extraNumbers.push(D);
-
-  if (D >= 10) {
-    extraNumbers.push(sumDigits(D));
-  }
-
-
-  /* Цифры для психоматрицы */
-
-  const allDigits = [];
-
-
-  /* Цифры даты */
-
-  digits.forEach(digit => {
-    if (digit !== 0) {
-      allDigits.push(digit);
-    }
-  });
-
+  /* ================================
+     ДОПОЛНИТЕЛЬНЫЕ ЧИСЛА
+     ================================ */
 
   /* Первое дополнительное */
 
-  addDigitsFromNumber(A, allDigits);
+  const firstAdditional =
+    dateDigits.reduce(function(sum, digit) {
+      return sum + digit;
+    }, 0);
 
 
   /* Второе дополнительное */
 
-  addDigitsFromNumber(B, allDigits);
+  const secondAdditional =
+    sumDigits(firstAdditional);
 
 
-  /*
-   * Только если второе дополнительное
-   * двузначное — добавляем его сведение
-   */
+  /* Первая цифра дня */
 
-  if (B >= 10) {
-    addDigitsFromNumber(
-      sumDigits(B),
-      allDigits
-    );
-  }
+  const firstDayDigit =
+    day < 10
+      ? day
+      : Number(String(day).charAt(0));
 
 
   /* Третье дополнительное */
 
-  addDigitsFromNumber(C, allDigits);
+  const thirdAdditional =
+    firstAdditional - (2 * firstDayDigit);
 
 
   /* Четвёртое дополнительное */
 
-  addDigitsFromNumber(D, allDigits);
+  const fourthAdditional =
+    sumDigits(thirdAdditional);
 
+
+  /* ================================
+     ФОРМИРУЕМ ЦЕПОЧКУ
+     ================================ */
+
+  const extraNumbers = [];
 
   /*
-   * Только если четвёртое дополнительное
+   * 1-е дополнительное
+   */
+  extraNumbers.push(firstAdditional);
+
+  /*
+   * 2-е дополнительное
+   */
+  extraNumbers.push(secondAdditional);
+
+  /*
+   * ЕСЛИ 2-е дополнительное
    * двузначное — добавляем его сведение
    */
+  if (secondAdditional >= 10) {
+    extraNumbers.push(
+      sumDigits(secondAdditional)
+    );
+  }
 
-  if (D >= 10) {
-    addDigitsFromNumber(
-      sumDigits(D),
-      allDigits
+  /*
+   * 3-е дополнительное
+   */
+  extraNumbers.push(thirdAdditional);
+
+  /*
+   * 4-е дополнительное
+   */
+  extraNumbers.push(fourthAdditional);
+
+  /*
+   * ЕСЛИ 4-е дополнительное
+   * двузначное — добавляем его сведение
+   */
+  if (fourthAdditional >= 10) {
+    extraNumbers.push(
+      sumDigits(fourthAdditional)
     );
   }
 
 
-  /* Подсчёт цифр */
+  /* ================================
+     ЦИФРЫ ДЛЯ ПСИХОМАТРИЦЫ
+     ================================ */
+
+  const allDigits = [];
+
+
+  /* Сначала цифры даты */
+
+  dateDigits.forEach(function(digit) {
+
+    if (digit !== 0) {
+      allDigits.push(digit);
+    }
+
+  });
+
+
+  /* 1-е дополнительное */
+
+  addNumberDigits(
+    firstAdditional,
+    allDigits
+  );
+
+
+  /* 2-е дополнительное */
+
+  addNumberDigits(
+    secondAdditional,
+    allDigits
+  );
+
+
+  /*
+   * Сведение 2-го дополнительного
+   * только если оно двузначное
+   */
+
+  if (secondAdditional >= 10) {
+
+    addNumberDigits(
+      sumDigits(secondAdditional),
+      allDigits
+    );
+
+  }
+
+
+  /* 3-е дополнительное */
+
+  addNumberDigits(
+    thirdAdditional,
+    allDigits
+  );
+
+
+  /* 4-е дополнительное */
+
+  addNumberDigits(
+    fourthAdditional,
+    allDigits
+  );
+
+
+  /*
+   * Сведение 4-го дополнительного
+   * только если оно двузначное
+   */
+
+  if (fourthAdditional >= 10) {
+
+    addNumberDigits(
+      sumDigits(fourthAdditional),
+      allDigits
+    );
+
+  }
+
+
+  /* ================================
+     ПОДСЧЁТ ЦИФР
+     ================================ */
 
   const counts = {
     1: 0,
@@ -307,7 +387,7 @@ function calculate() {
   };
 
 
-  allDigits.forEach(digit => {
+  allDigits.forEach(function(digit) {
 
     if (digit >= 1 && digit <= 9) {
       counts[digit]++;
@@ -316,7 +396,9 @@ function calculate() {
   });
 
 
-  /* Названия */
+  /* ================================
+     НАЗВАНИЯ
+     ================================ */
 
   const names = {
     1: 'Характер',
@@ -331,7 +413,9 @@ function calculate() {
   };
 
 
-  /* Психоматрица */
+  /* ================================
+     ПСИХОМАТРИЦА
+     ================================ */
 
   const matrixOrder = [
     1, 4, 7,
@@ -340,7 +424,7 @@ function calculate() {
   ];
 
 
-  matrixOrder.forEach(number => {
+  matrixOrder.forEach(function(number) {
 
     const cell =
       document.getElementById('cell' + number);
@@ -348,99 +432,96 @@ function calculate() {
     const count =
       counts[number];
 
-    cell.innerHTML = `
-      <div class="number">
-        ${count > 0
+    cell.innerHTML =
+      '<div class="number">' +
+      (
+        count > 0
           ? String(number).repeat(count)
-          : '—'}
-      </div>
-
-      <div class="name">
-        ${names[number]}
-      </div>
-    `;
+          : '—'
+      ) +
+      '</div>' +
+      '<div class="name">' +
+      names[number] +
+      '</div>';
 
   });
 
 
-  /* Показатели */
+  /* ================================
+     ПОКАЗАТЕЛИ
+     ================================ */
 
   const indicators = [
 
     [
       'Темперамент',
       '3 + 5 + 7',
-      counts[3] +
-      counts[5] +
-      counts[7]
+      counts[3] + counts[5] + counts[7]
     ],
 
     [
       'Быт',
       '4 + 5 + 6',
-      counts[4] +
-      counts[5] +
-      counts[6]
+      counts[4] + counts[5] + counts[6]
     ],
 
     [
       'Целеустремлённость',
       '1 + 4 + 7',
-      counts[1] +
-      counts[4] +
-      counts[7]
+      counts[1] + counts[4] + counts[7]
     ],
 
     [
       'Семья',
       '2 + 5 + 8',
-      counts[2] +
-      counts[5] +
-      counts[8]
+      counts[2] + counts[5] + counts[8]
     ],
 
     [
       'Привычки',
       '3 + 6 + 9',
-      counts[3] +
-      counts[6] +
-      counts[9]
+      counts[3] + counts[6] + counts[9]
     ],
 
     [
       'Стабильность',
       '3 + 6 + 9',
-      counts[3] +
-      counts[6] +
-      counts[9]
+      counts[3] + counts[6] + counts[9]
     ]
 
   ];
 
 
   document.getElementById('indicators').innerHTML =
-    indicators.map(item => `
-      <tr>
-        <td>${item[0]}</td>
-        <td>${item[1]}</td>
-        <td>${item[2]}</td>
-      </tr>
-    `).join('');
+    indicators.map(function(item) {
+
+      return (
+        '<tr>' +
+        '<td>' + item[0] + '</td>' +
+        '<td>' + item[1] + '</td>' +
+        '<td>' + item[2] + '</td>' +
+        '</tr>'
+      );
+
+    }).join('');
 
 
-  /* Дополнительные числа */
+  /* ================================
+     ДОПОЛНИТЕЛЬНЫЕ ЧИСЛА
+     ================================ */
 
-  document.getElementById('extras').innerHTML = `
-    <tr>
-      <td>Дополнительные числа</td>
-      <td>
-        <b>${extraNumbers.join(' / ')}</b>
-      </td>
-    </tr>
-  `;
+  document.getElementById('extras').innerHTML =
+    '<tr>' +
+    '<td>Дополнительные числа</td>' +
+    '<td><b>' +
+    extraNumbers.join(' / ') +
+    '</b></td>' +
+    '</tr>';
 
 
-  /* Показываем результат */
+  /* ================================
+     ПОКАЗЫВАЕМ РЕЗУЛЬТАТ
+     ================================ */
 
   document
     .getElementById('result')
