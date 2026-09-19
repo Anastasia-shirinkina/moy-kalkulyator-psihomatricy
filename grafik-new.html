@@ -193,8 +193,15 @@ svg {
         <p class="subtitle">
             Введите дату рождения и год, чтобы рассчитать ваш график на 12 месяцев.
         </p>
-
-        <div class="form">
+<div id="accessMessage" style="
+  margin-bottom:20px;
+  padding:14px;
+  background:#f7f4f1;
+  border-radius:10px;
+">
+  Проверяем доступ...
+</div>
+        <div id="calculatorForm" class="form" style="display:none;">
 
             <div>
                 <label for="birthDate">Дата рождения</label>
@@ -217,7 +224,7 @@ svg {
                 >
             </div>
 
-            <button onclick="calculateGraph()">
+            <button onclick="calculateGraphWithAccess()">
                 Рассчитать
             </button>
 
@@ -368,7 +375,184 @@ const months = [
 
 ];
 
+const ACCESS_API =
+  'https://script.google.com/macros/s/AKfycbwEaboqrnX6wZltS8mbWF9u2CRwYUfhrS6f0I0-ef9MHYgnaHc_J-s_jr8PmsEcMpx5/exec';
 
+const accessToken =
+  new URLSearchParams(window.location.search).get('access');
+
+let accessData = null;
+
+function callAccessAPI(action, params = {}) {
+
+  return new Promise((resolve) => {
+
+    const callbackName =
+      'accessCallback_' +
+      Date.now() +
+      '_' +
+      Math.random().toString(36).substring(2);
+
+    window[callbackName] = function(data) {
+
+      delete window[callbackName];
+      script.remove();
+
+      resolve(data);
+
+    };
+
+    const script =
+      document.createElement('script');
+
+    const query =
+      new URLSearchParams({
+        action: action,
+        token: accessToken,
+        callback: callbackName,
+        ...params
+      });
+
+    script.src =
+      ACCESS_API + '?' + query.toString();
+
+    document.body.appendChild(script);
+
+  });
+
+}
+
+
+async function initAccess() {
+
+  const message =
+    document.getElementById('accessMessage');
+
+  const form =
+    document.getElementById('calculatorForm');
+
+  if (!accessToken) {
+
+    message.textContent =
+      'Ссылка недействительна.';
+
+    return;
+
+  }
+
+  const result =
+    await callAccessAPI('check');
+
+  if (!result || !result.ok) {
+
+    message.textContent =
+      'Доступ не найден.';
+
+    return;
+
+  }
+
+  accessData = result;
+
+  if (result.birthDate) {
+
+    document.getElementById('birthDate').value =
+      result.birthDate;
+
+    document.getElementById('birthDate').disabled =
+      true;
+
+    message.textContent =
+      'Дата рождения уже закреплена за этим доступом.';
+
+  } else {
+
+    message.textContent =
+      'Введите дату рождения. После первого расчёта она будет закреплена за этой ссылкой.';
+
+  }
+
+  form.style.display = 'grid';
+
+}
+
+
+async function bindBirthDate() {
+
+  const birthDate =
+    document.getElementById('birthDate').value;
+
+  const result =
+    await callAccessAPI(
+      'bind',
+      {
+        date: birthDate
+      }
+    );
+
+  if (!result || !result.ok) {
+
+    document.getElementById('error').textContent =
+      result && result.error
+        ? result.error
+        : 'Не удалось сохранить дату.';
+
+    document.getElementById('error').style.display =
+      'block';
+
+    return false;
+
+  }
+
+  document.getElementById('birthDate').value =
+    result.birthDate;
+
+  document.getElementById('birthDate').disabled =
+    true;
+
+  document.getElementById('accessMessage').textContent =
+    'Дата рождения закреплена за этой ссылкой. Теперь можно выбирать любой год прогноза.';
+
+  return true;
+
+}
+
+
+async function calculateGraphWithAccess() {
+
+  const birthDate =
+    document.getElementById('birthDate').value;
+
+  if (!birthDate) {
+
+    document.getElementById('error').textContent =
+      'Введите дату рождения.';
+
+    document.getElementById('error').style.display =
+      'block';
+
+    return;
+
+  }
+
+  if (!accessData.birthDate) {
+
+    const saved =
+      await bindBirthDate();
+
+    if (!saved) return;
+
+  }
+
+  calculateGraph();
+
+}
+
+
+window.addEventListener(
+  'DOMContentLoaded',
+  initAccess
+);
 /* ==========================================
    ОСНОВНОЙ РАСЧЁТ
 ========================================== */
