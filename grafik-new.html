@@ -69,6 +69,11 @@ input {
     font-size: 16px;
 }
 
+input:disabled {
+    background: #f2efec;
+    color: #777;
+}
+
 button {
     grid-column: 1 / -1;
     height: 50px;
@@ -154,6 +159,13 @@ svg {
     font-size: 13px;
 }
 
+.access-message {
+    margin-bottom: 20px;
+    padding: 14px;
+    background: #f7f4f1;
+    border-radius: 10px;
+}
+
 @media (max-width: 700px) {
 
     h1 {
@@ -191,16 +203,13 @@ svg {
         <h1>Психоэмоциональный график года</h1>
 
         <p class="subtitle">
-            Введите дату рождения и год, чтобы рассчитать ваш график на 12 месяцев.
+            Введите дату рождения один раз. После этого вы сможете рассчитывать свой график на любой год.
         </p>
-<div id="accessMessage" style="
-  margin-bottom:20px;
-  padding:14px;
-  background:#f7f4f1;
-  border-radius:10px;
-">
-  Проверяем доступ...
-</div>
+
+        <div id="accessMessage" class="access-message">
+            Проверяем доступ...
+        </div>
+
         <div id="calculatorForm" class="form" style="display:none;">
 
             <div>
@@ -236,9 +245,6 @@ svg {
 
 
     <div id="result" class="hidden">
-
-        
-
 
         <div class="card">
 
@@ -344,11 +350,11 @@ const descriptions = {
 `,
 
 8: `
-это период, когда вы ощущаете силу, энергию и готовность брать на себя ответственность за свои дела и окружающих. При подъёме восьмёрка проявляется через уверенность, решимость и способность справляться с нагрузкой. Вы чувствуете внутреннюю силу и способность достигать целей, брать инициативу и управлять процессами. Энергия высокая, а умение концентрироваться и направлять её в нужное русло позволяет справляться с сложными задачами и достигать заметных результатов. В такие моменты легко вдохновлять других, ощущать влияние на ситуацию и чувствовать, что можете контролировать жизнь. В такие периода можно хорошо зарабатать. Так как восьмёрка - это материальная цифра, хорошо инвестировать в такие периоды, что-то приобретать. При спаде сила восьмёрки может превращаться в давление и стресс. Лёгкое напряжение перерастает в чрезмерное требование к себе и другим, ощущение перегруженности и невозможности расслабиться. Появляется раздражительность, усталость, эмоциональная жёсткость и желание контролировать каждую деталь. В такие моменты легко брать на себя слишком много и перегружаться, теряя радость и удовлетворение от работы. Не рекомендуется, что-то приобретать крупное, во что-то инвестировать.  Плюсы периода проявляются в вашей способности брать на себя ответственность, проявлять лидерство, решимость и силу воли. Минусы - чрезмерная жёсткость, давление на себя и других, склонность к переутомлению. Вы рискуете эмоционально истощаться и создавать напряжение вокруг себя, если не умеете управлять своей силой и энергией. Задача восьмёрки - научиться осознанно использовать свои ресурсы, распределять нагрузку и сохранять баланс между активностью и отдыхом. Риск периода - чрезмерная требовательность к себе и окружающим, выгорание и потеря внутреннего спокойствия из-за давления и перегрузки.
+это период, когда вы ощущаете силу, энергию и готовность брать на себя ответственность за свои дела и окружающих. При подъёме восьмёрка проявляется через уверенность, решимость и способность справляться с нагрузкой. Вы чувствуете внутреннюю силу и способность достигать целей, брать инициативу и управлять процессами. Энергия высокая, а умение концентрироваться и направлять её в нужное русло позволяет справляться с сложными задачами и достигать заметных результатов. В такие моменты легко вдохновлять других, ощущать влияние на ситуацию и чувствовать, что можете контролировать жизнь. В такие периода можно хорошо зарабатать. Так как восьмёрка - это материальная цифра, хорошо инвестировать в такие периоды, что-то приобретать. При спаде сила восьмёрки может превращаться в давление и стресс. Лёгкое напряжение перерастает в чрезмерное требование к себе и другим, ощущение перегруженности и невозможности расслабиться. Появляется раздражительность, усталость, эмоциональная жёсткость и желание контролировать каждую деталь. В такие моменты легко брать на себя слишком много и перегружаться, теряя радость и удовлетворение от работы. Не рекомендуется, что-то приобретать крупное, во что-то инвестировать. Плюсы периода проявляются в вашей способности брать на себя ответственность, проявлять лидерство, решимость и силу воли. Минусы - чрезмерная жёсткость, давление на себя и других, склонность к переутомлению. Вы рискуете эмоционально истощаться и создавать напряжение вокруг себя, если не умеете управлять своей силой и энергией. Задача восьмёрки - научиться осознанно использовать свои ресурсы, распределять нагрузку и сохранять баланс между активностью и отдыхом. Риск периода - чрезмерная требовательность к себе и окружающим, выгорание и потеря внутреннего спокойствия из-за давления и перегрузки.
 `,
 
 9: `
-это период, когда наступает время подводить итоги, завершать старые дела, отпускать то, что больше не служит, и готовиться к новому этапу. При подъёме девятка проявляется через внутренний покой, ощущение завершённости и способность отпускать без чувства вины. Вы видите результаты своих усилий, умеете оценивать достижения и благодарно принимать опыт. В такие моменты легко расставаться с ненужным, завершать отношения, закрывать проекты и отпускать старые привычки. Появляется ясность и лёгкость в душе, а умение подводить итоги даёт чувство внутреннего равновесия и удовлетворения. В такой период можно добиться своих максимальных возможностей.  При спаде девятка может проявляться через грусть, сожаления и пассивность. Возникает ощущение, что что-то упущено, а прошлое давит на настоящее. Иногда появляется желание вернуться к старым событиям, отношениям или привычкам, застрять в воспоминаниях и не двигаться дальше. Эмоциональная усталость и сниженная мотивация могут мешать действовать и радоваться жизни. Плюсы периода проявляются в способности отпускать, завершать дела и подводить итоги. Вы учитесь принимать опыт, ценить пройденное и двигаться дальше с лёгкостью и внутренним спокойствием. Минусы возникают, когда завершение превращается в сожаления, грусть или пассивность. Вы рискуете застрять в прошлом и терять контакт с настоящим, если не умеете отпускать. Задача девятки - позволить себе завершать, отпускать и подводить итоги без чувства вины и сожалений. Риск периода - застревание в прошлом, чрезмерные эмоции по поводу ушедшего и неспособность увидеть новые возможности и перспективы.
+это период, когда наступает время подводить итоги, завершать старые дела, отпускать то, что больше не служит, и готовиться к новому этапу. При подъёме девятка проявляется через внутренний покой, ощущение завершённости и способность отпускать без чувства вины. Вы видите результаты своих усилий, умеете оценивать достижения и благодарно принимать опыт. В такие моменты легко расставаться с ненужным, завершать отношения, закрывать проекты и отпускать старые привычки. Появляется ясность и лёгкость в душе, а умение подводить итоги даёт чувство внутреннего равновесия и удовлетворения. В такой период можно добиться своих максимальных возможностей. При спаде девятка может проявляться через грусть, сожаления и пассивность. Возникает ощущение, что что-то упущено, а прошлое давит на настоящее. Иногда появляется желание вернуться к старым событиям, отношениям или привычкам, застрять в воспоминаниях и не двигаться дальше. Эмоциональная усталость и сниженная мотивация могут мешать действовать и радоваться жизни. Плюсы периода проявляются в способности отпускать, завершать дела и подводить итоги. Вы учитесь принимать опыт, ценить пройденное и двигаться дальше с лёгкостью и внутренним спокойствием. Минусы возникают, когда завершение превращается в сожаления, грусть или пассивность. Вы рискуете застрять в прошлом и терять контакт с настоящим, если не умеете отпускать. Задача девятки - позволить себе завершать, отпускать и подводить итоги без чувства вины и сожалений. Риск периода - застревание в прошлом, чрезмерные эмоции по поводу ушедшего и неспособность увидеть новые возможности и перспективы.
 `
 
 };
@@ -375,184 +381,389 @@ const months = [
 
 ];
 
+
+/* ==========================================
+   ДОСТУП
+========================================== */
+
 const ACCESS_API =
-  'https://script.google.com/macros/s/AKfycbwEaboqrnX6wZltS8mbWF9u2CRwYUfhrS6f0I0-ef9MHYgnaHc_J-s_jr8PmsEcMpx5/exec';
+    'https://script.google.com/macros/s/AKfycbwEaboqrnX6wZltS8mbWF9u2CRwYUfhrS6f0I0-ef9MHYgnaHc_J-s_jr8PmsEcMpx5/exec';
 
 const accessToken =
-  new URLSearchParams(window.location.search).get('access');
+    new URLSearchParams(
+        window.location.search
+    ).get('access');
 
 let accessData = null;
 
-function callAccessAPI(action, params = {}) {
 
-  return new Promise((resolve) => {
+function callAccessAPI(
+    action,
+    params = {}
+) {
 
-    const callbackName =
-      'accessCallback_' +
-      Date.now() +
-      '_' +
-      Math.random().toString(36).substring(2);
+    return new Promise(
+        (resolve) => {
 
-    window[callbackName] = function(data) {
+            const callbackName =
+                'accessCallback_' +
+                Date.now() +
+                '_' +
+                Math.random()
+                    .toString(36)
+                    .substring(2);
 
-      delete window[callbackName];
-      script.remove();
+            const script =
+                document.createElement('script');
 
-      resolve(data);
 
-    };
+            window[callbackName] =
+                function(data) {
 
-    const script =
-      document.createElement('script');
+                    delete window[callbackName];
 
-    const query =
-      new URLSearchParams({
-        action: action,
-        token: accessToken,
-        callback: callbackName,
-        ...params
-      });
+                    if (
+                        script.parentNode
+                    ) {
+                        script.parentNode
+                            .removeChild(script);
+                    }
 
-    script.src =
-      ACCESS_API + '?' + query.toString();
+                    resolve(data);
 
-    document.body.appendChild(script);
+                };
 
-  });
+
+            const query =
+                new URLSearchParams({
+
+                    action: action,
+
+                    token: accessToken,
+
+                    callback: callbackName,
+
+                    ...params
+
+                });
+
+
+            script.src =
+                ACCESS_API +
+                '?' +
+                query.toString();
+
+
+            document.body
+                .appendChild(script);
+
+        }
+    );
 
 }
 
+
+/* ==========================================
+   ПРОВЕРКА ДОСТУПА
+========================================== */
 
 async function initAccess() {
 
-  const message =
-    document.getElementById('accessMessage');
+    const message =
+        document.getElementById(
+            'accessMessage'
+        );
 
-  const form =
-    document.getElementById('calculatorForm');
+    const form =
+        document.getElementById(
+            'calculatorForm'
+        );
 
-  if (!accessToken) {
 
-    message.textContent =
-      'Ссылка недействительна.';
+    if (!accessToken) {
 
-    return;
+        message.textContent =
+            'Ссылка недействительна.';
 
-  }
+        return;
 
-  const result =
-    await callAccessAPI('check');
+    }
 
-  if (!result || !result.ok) {
 
-    message.textContent =
-      'Доступ не найден.';
+    try {
 
-    return;
+        const result =
+            await callAccessAPI(
+                'check'
+            );
 
-  }
 
-  accessData = result;
+        if (
+            !result ||
+            !result.ok
+        ) {
 
-  if (result.birthDate) {
+            message.textContent =
+                'Доступ не найден.';
 
-    document.getElementById('birthDate').value =
-      result.birthDate;
+            return;
 
-    document.getElementById('birthDate').disabled =
-      true;
+        }
 
-    message.textContent =
-      'Дата рождения уже закреплена за этим доступом.';
 
-  } else {
+        accessData =
+            result;
 
-    message.textContent =
-      'Введите дату рождения. После первого расчёта она будет закреплена за этой ссылкой.';
 
-  }
+        if (
+            result.birthDate
+        ) {
 
-  form.style.display = 'grid';
+            document
+                .getElementById(
+                    'birthDate'
+                )
+                .value =
+                result.birthDate;
+
+
+            document
+                .getElementById(
+                    'birthDate'
+                )
+                .disabled =
+                true;
+
+
+            message.textContent =
+                'Дата рождения уже закреплена за этой ссылкой. Теперь можно выбирать любой год прогноза.';
+
+        } else {
+
+            message.textContent =
+                'Введите свою дату рождения. После первого расчёта она будет закреплена за этой ссылкой.';
+
+        }
+
+
+        form.style.display =
+            'grid';
+
+
+    } catch (error) {
+
+        message.textContent =
+            'Не удалось проверить доступ. Попробуйте обновить страницу.';
+
+    }
 
 }
 
+
+/* ==========================================
+   ЗАКРЕПЛЕНИЕ ДАТЫ
+========================================== */
 
 async function bindBirthDate() {
 
-  const birthDate =
-    document.getElementById('birthDate').value;
+    const birthDate =
+        document
+            .getElementById(
+                'birthDate'
+            )
+            .value;
 
-  const result =
-    await callAccessAPI(
-      'bind',
-      {
-        date: birthDate
-      }
-    );
 
-  if (!result || !result.ok) {
+    if (!birthDate) {
 
-    document.getElementById('error').textContent =
-      result && result.error
-        ? result.error
-        : 'Не удалось сохранить дату.';
+        const error =
+            document.getElementById(
+                'error'
+            );
 
-    document.getElementById('error').style.display =
-      'block';
+        error.textContent =
+            'Введите дату рождения.';
 
-    return false;
+        error.style.display =
+            'block';
 
-  }
+        return false;
 
-  document.getElementById('birthDate').value =
-    result.birthDate;
+    }
 
-  document.getElementById('birthDate').disabled =
-    true;
 
-  document.getElementById('accessMessage').textContent =
-    'Дата рождения закреплена за этой ссылкой. Теперь можно выбирать любой год прогноза.';
+    try {
 
-  return true;
+        const result =
+            await callAccessAPI(
+
+                'bind',
+
+                {
+                    date: birthDate
+                }
+
+            );
+
+
+        if (
+            !result ||
+            !result.ok
+        ) {
+
+            const error =
+                document.getElementById(
+                    'error'
+                );
+
+            error.textContent =
+                result &&
+                result.error
+                    ? result.error
+                    : 'Не удалось сохранить дату.';
+
+            error.style.display =
+                'block';
+
+            return false;
+
+        }
+
+
+        document
+            .getElementById(
+                'birthDate'
+            )
+            .value =
+            result.birthDate;
+
+
+        document
+            .getElementById(
+                'birthDate'
+            )
+            .disabled =
+            true;
+
+
+        document
+            .getElementById(
+                'accessMessage'
+            )
+            .textContent =
+            'Дата рождения закреплена за этой ссылкой. Теперь можно выбирать любой год прогноза.';
+
+
+        accessData.birthDate =
+            result.birthDate;
+
+
+        return true;
+
+
+    } catch (error) {
+
+        const errorBox =
+            document.getElementById(
+                'error'
+            );
+
+        errorBox.textContent =
+            'Не удалось сохранить дату. Попробуйте ещё раз.';
+
+        errorBox.style.display =
+            'block';
+
+        return false;
+
+    }
 
 }
 
+
+/* ==========================================
+   РАСЧЁТ С ПРОВЕРКОЙ ДОСТУПА
+========================================== */
 
 async function calculateGraphWithAccess() {
 
-  const birthDate =
-    document.getElementById('birthDate').value;
+    const error =
+        document.getElementById(
+            'error'
+        );
 
-  if (!birthDate) {
+    error.style.display =
+        'none';
 
-    document.getElementById('error').textContent =
-      'Введите дату рождения.';
 
-    document.getElementById('error').style.display =
-      'block';
+    const birthDate =
+        document
+            .getElementById(
+                'birthDate'
+            )
+            .value;
 
-    return;
 
-  }
+    const year =
+        parseInt(
+            document
+                .getElementById(
+                    'forecastYear'
+                )
+                .value
+        );
 
-  if (!accessData.birthDate) {
 
-    const saved =
-      await bindBirthDate();
+    if (!birthDate) {
 
-    if (!saved) return;
+        error.textContent =
+            'Введите дату рождения.';
 
-  }
+        error.style.display =
+            'block';
 
-  calculateGraph();
+        return;
+
+    }
+
+
+    if (
+        !year ||
+        year < 1 ||
+        year > 9999
+    ) {
+
+        error.textContent =
+            'Введите корректный год прогноза.';
+
+        error.style.display =
+            'block';
+
+        return;
+
+    }
+
+
+    if (
+        !accessData ||
+        !accessData.birthDate
+    ) {
+
+        const saved =
+            await bindBirthDate();
+
+        if (!saved) {
+            return;
+        }
+
+    }
+
+
+    calculateGraph();
 
 }
 
 
-window.addEventListener(
-  'DOMContentLoaded',
-  initAccess
-);
 /* ==========================================
    ОСНОВНОЙ РАСЧЁТ
 ========================================== */
@@ -560,26 +771,44 @@ window.addEventListener(
 function calculateGraph() {
 
     const birthDate =
-        document.getElementById("birthDate").value;
+        document
+            .getElementById(
+                "birthDate"
+            )
+            .value;
+
 
     const year =
         parseInt(
-            document.getElementById("forecastYear").value
+            document
+                .getElementById(
+                    "forecastYear"
+                )
+                .value
         );
 
+
     const error =
-        document.getElementById("error");
+        document
+            .getElementById(
+                "error"
+            );
 
 
-    error.style.display = "none";
+    error.style.display =
+        "none";
 
 
-    if (!birthDate || !year) {
+    if (
+        !birthDate ||
+        !year
+    ) {
 
         error.textContent =
             "Введите дату рождения и год прогноза.";
 
-        error.style.display = "block";
+        error.style.display =
+            "block";
 
         return;
     }
@@ -592,11 +821,14 @@ function calculateGraph() {
     const parts =
         birthDate.split("-");
 
+
     const birthYear =
         parseInt(parts[0]);
 
+
     const birthMonth =
         parseInt(parts[1]);
+
 
     const birthDay =
         parseInt(parts[2]);
@@ -612,8 +844,13 @@ function calculateGraph() {
 
     const dayMonth =
         parseInt(
-            String(birthDay).padStart(2,"0") +
-            String(birthMonth).padStart(2,"0")
+
+            String(birthDay)
+                .padStart(2, "0") +
+
+            String(birthMonth)
+                .padStart(2, "0")
+
         );
 
 
@@ -622,7 +859,8 @@ function calculateGraph() {
     */
 
     const first =
-        dayMonth * birthYear;
+        dayMonth *
+        birthYear;
 
 
     /*
@@ -630,7 +868,8 @@ function calculateGraph() {
     */
 
     const second =
-        first * 12;
+        first *
+        12;
 
 
     /*
@@ -638,7 +877,10 @@ function calculateGraph() {
     */
 
     const finalNumber =
-        String(second * year);
+        String(
+            second *
+            year
+        );
 
 
     /*
@@ -650,6 +892,7 @@ function calculateGraph() {
 
     const graphValues = [];
 
+
     for (
         let i = 0;
         i < 12;
@@ -659,18 +902,23 @@ function calculateGraph() {
         const digit =
             Number(
                 finalNumber[
-                    i % finalNumber.length
+                    i %
+                    finalNumber.length
                 ]
             );
 
-        graphValues.push(digit);
+
+        graphValues.push(
+            digit
+        );
+
     }
 
 
-   
-
-
-    document.getElementById("chartTitle")
+    document
+        .getElementById(
+            "chartTitle"
+        )
         .textContent =
         `Психоэмоциональный график на ${year} год`;
 
@@ -679,14 +927,18 @@ function calculateGraph() {
        Строим график
     */
 
-    drawChart(graphValues);
+    drawChart(
+        graphValues
+    );
 
 
     /*
        Показываем месяцы
     */
 
-    showMonths(graphValues);
+    showMonths(
+        graphValues
+    );
 
 
     /*
@@ -694,16 +946,21 @@ function calculateGraph() {
     */
 
     document
-        .getElementById("result")
+        .getElementById(
+            "result"
+        )
         .classList
         .remove("hidden");
 
 
     document
-        .getElementById("result")
+        .getElementById(
+            "result"
+        )
         .scrollIntoView({
             behavior: "smooth"
         });
+
 }
 
 
@@ -714,18 +971,26 @@ function calculateGraph() {
 function showMonths(values) {
 
     const container =
-        document.getElementById("months");
+        document.getElementById(
+            "months"
+        );
 
-    container.innerHTML = "";
+
+    container.innerHTML =
+        "";
 
 
     values.forEach(
-        (value,index) => {
+        (value, index) => {
 
             const month =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
-            month.className = "month";
+
+            month.className =
+                "month";
 
 
             month.innerHTML = `
@@ -745,10 +1010,13 @@ function showMonths(values) {
             `;
 
 
-            container.appendChild(month);
+            container.appendChild(
+                month
+            );
 
         }
     );
+
 }
 
 
@@ -759,7 +1027,9 @@ function showMonths(values) {
 function drawChart(values) {
 
     const svg =
-        document.getElementById("chart");
+        document.getElementById(
+            "chart"
+        );
 
 
     const width = 850;
@@ -772,13 +1042,19 @@ function drawChart(values) {
 
 
     const chartWidth =
-        width - left - right;
+        width -
+        left -
+        right;
+
 
     const chartHeight =
-        height - top - bottom;
+        height -
+        top -
+        bottom;
 
 
-    let html = "";
+    let html =
+        "";
 
 
     /*
@@ -821,6 +1097,7 @@ function drawChart(values) {
             </text>
 
         `;
+
     }
 
 
@@ -830,7 +1107,7 @@ function drawChart(values) {
 
     const points =
         values.map(
-            (value,index) => {
+            (value, index) => {
 
                 const x =
                     left +
@@ -846,8 +1123,8 @@ function drawChart(values) {
 
 
                 return {
-                    x:x,
-                    y:y
+                    x: x,
+                    y: y
                 };
 
             }
@@ -885,7 +1162,7 @@ function drawChart(values) {
     */
 
     points.forEach(
-        (point,index) => {
+        (point, index) => {
 
             html += `
 
@@ -949,24 +1226,20 @@ function drawChart(values) {
     `;
 
 
-    svg.innerHTML = html;
+    svg.innerHTML =
+        html;
+
 }
 
 
 /* ==========================================
-   АВТОМАТИЧЕСКИЙ ПРИМЕР
+   ЗАПУСК ПРОВЕРКИ ДОСТУПА
 ========================================== */
 
-/*
-   При открытии калькулятора
-   автоматически подставляем вашу дату.
-
-   Можно удалить этот блок,
-   если хотите, чтобы поля были пустыми.
-*/
-
-document.getElementById("birthDate").value =
-    "1987-06-24";
+window.addEventListener(
+    'DOMContentLoaded',
+    initAccess
+);
 
 </script>
 
